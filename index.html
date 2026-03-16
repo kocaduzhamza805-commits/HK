@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
 <!-- PWA — iOS -->
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -72,63 +72,75 @@ self.addEventListener('fetch', e => {
   });
 }
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg:#0d0f14;--bg2:#13161d;--bg3:#1a1e28;--border:#252a38;
-  --accent:#e8c547;--accent2:#f0a500;--green:#3ecf8e;--red:#f04d4d;--red-dim:#3a1a1a;
-  --text:#eef0f5;--text2:#8a90a8;--text3:#555c73;--card-bg:#161a24;
-  --radius:16px;--radius-sm:10px;--shadow:0 4px 24px rgba(0,0,0,0.4);
-  --font-display:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;
-  --nav-w:230px;--mob-nav-h:68px;
-}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{font-size:16px}
-body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-/* PWA tam ekran — iOS safe area */
-@supports (padding-top: env(safe-area-inset-top)) {
-  .sidebar { padding-top: calc(1.5rem + env(safe-area-inset-top)); }
-  .mobile-nav { padding-bottom: env(safe-area-inset-bottom); height: calc(var(--mob-nav-h) + env(safe-area-inset-bottom)); }
-  .main { padding-bottom: calc(var(--mob-nav-h) + env(safe-area-inset-bottom) + 1rem); }
-  .sohbet-btn { bottom: calc(var(--mob-nav-h) + env(safe-area-inset-bottom) + 1rem); }
-  .sohbet-panel { bottom: calc(var(--mob-nav-h) + env(safe-area-inset-bottom) + 4.5rem); }
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+:root {
+  --bg:#05060a;--bg2:#0c0d14;--bg3:#10111a;--bg4:#14161f;
+  --border:#1c1f2b;--border2:#22253a;
+  --gold:#c9a535;--gold2:#e8c547;--gold-dim:rgba(201,165,53,.12);
+  --green:#4a9e5c;--green-dim:rgba(74,158,92,.12);
+  --red:#c05050;--red-dim:rgba(192,80,80,.12);
+  --blue:#5b8fff;--blue-dim:rgba(91,143,255,.12);
+  --text:#f0ead8;--text2:#8a8fa8;--text3:#3a3d4a;
+  --card-bg:#0c0d14;
+  --radius:14px;--radius-sm:10px;--radius-xs:8px;
+  --font:'Inter',sans-serif;
+  --nav-w:0px;--mob-nav-h:68px;
+  --touch:48px;
 }
+
+/* iPhone 11 — temel reset */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+html{font-size:16px;height:-webkit-fill-available}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;min-height:-webkit-fill-available;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* Input zoom engeli — iOS 16px altında zoom yapar */
+input,select,textarea{font-size:16px!important}
+
+/* Safe area — iPhone 11 çentik için */
+@supports(padding-top:env(safe-area-inset-top)){
+  body{padding-top:env(safe-area-inset-top)}
+  .mobile-nav{padding-bottom:env(safe-area-inset-bottom);height:calc(var(--mob-nav-h) + env(safe-area-inset-bottom))}
+  .main{padding-bottom:calc(var(--mob-nav-h) + env(safe-area-inset-bottom) + 1.5rem)}
+  .sohbet-btn{bottom:calc(var(--mob-nav-h) + env(safe-area-inset-bottom) + 1rem)}
+  .sohbet-panel{bottom:calc(var(--mob-nav-h) + env(safe-area-inset-bottom) + 4.5rem)}
+  .modal-overlay{padding-bottom:env(safe-area-inset-bottom)}
+  .toast{bottom:calc(var(--mob-nav-h) + env(safe-area-inset-bottom) + 1rem)}
+}
+
+/* Minimum dokunma alanı 44px (Apple HIG) */
+button,a,[onclick]{min-height:var(--touch);display:inline-flex;align-items:center;justify-content:center}
+.filter-btn,.type-btn,.strat-tab,.risk-tab,.yeni-tab,.fchip{min-height:38px}
+.del-btn,.modal-close{min-height:36px;min-width:36px}
+
+/* Scroll iyileştirmeleri */
+.entry-list,.modal,.sohbet-mesajlar,.nav-list{-webkit-overflow-scrolling:touch}
+.mobile-nav{-webkit-overflow-scrolling:touch}
 
 /* SPLASH */
 .splash{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:opacity .6s,visibility .6s}
 .splash.hidden{opacity:0;visibility:hidden}
-.splash-logo{font-family:var(--font-display);font-size:5rem;color:var(--accent);animation:pulse 1.5s ease infinite}
-.splash-title{font-family:var(--font-display);font-size:2.5rem;font-weight:800;letter-spacing:-1px}
-.splash-sub{color:var(--text2);margin-top:.5rem;font-style:italic}
+.splash-logo{font-family:var(--font);font-size:5rem;font-weight:900;color:var(--gold);letter-spacing:4px;animation:pulse 1.5s ease infinite}
+.splash-title{font-family:var(--font);font-size:2rem;font-weight:800;letter-spacing:4px;color:var(--text)}
+.splash-sub{color:var(--text3);margin-top:.5rem;font-size:.85rem;letter-spacing:1px}
 .splash-content{text-align:center}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
 
 /* LAYOUT */
 #app{display:flex;min-height:100vh}
-.sidebar{width:var(--nav-w);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100;padding:1.5rem 0}
-.sidebar-header{display:flex;align-items:center;gap:.75rem;padding:0 1.5rem 1.5rem;border-bottom:1px solid var(--border)}
-.logo-mark{width:36px;height:36px;background:var(--accent);color:#000;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:1.2rem}
-.logo-text{font-family:var(--font-display);font-weight:800;font-size:1.3rem}
-.nav-list{list-style:none;padding:1rem 0;flex:1;overflow-y:auto}
-.nav-item{display:flex;align-items:center;gap:.75rem;padding:.65rem 1.5rem;cursor:pointer;color:var(--text2);font-size:.875rem;font-weight:500;transition:all .2s}
-.nav-item:hover{color:var(--text);background:var(--bg3)}
-.nav-item.active{color:var(--accent);background:rgba(232,197,71,.08);border-left:3px solid var(--accent)}
-.nav-icon{font-size:1rem;width:20px;text-align:center}
-.sidebar-footer{padding:1rem 1.5rem}
-.settings-btn{width:100%;padding:.6rem;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:var(--radius-sm);cursor:pointer;font-size:.85rem;transition:all .2s}
-.settings-btn:hover{border-color:var(--accent);color:var(--accent)}
+.sidebar{display:none}
+.main{flex:1;padding:1.25rem 1rem;max-width:680px;margin:0 auto;padding-bottom:calc(var(--mob-nav-h) + 1.5rem)}
 
-.main{margin-left:var(--nav-w);flex:1;padding:2rem;max-width:960px;padding-bottom:calc(var(--mob-nav-h) + 1rem)}
-
-/* MOBILE NAV */
-.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--mob-nav-h);background:var(--bg2);border-top:1px solid var(--border);z-index:100;padding:0;align-items:center;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+/* MOBILE NAV — premium */
+.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;height:var(--mob-nav-h);background:rgba(5,6,10,.95);border-top:1px solid var(--border);z-index:100;padding:0;align-items:center;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;backdrop-filter:blur(20px)}
 .mobile-nav::-webkit-scrollbar{display:none}
-.mobile-nav-inner{display:flex;align-items:center;padding:0 .25rem;min-width:max-content}
-.mnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:var(--text3);font-size:1.1rem;cursor:pointer;padding:.4rem .7rem;transition:color .2s;font-family:var(--font-body);flex-shrink:0;min-width:56px}
-.mnav-item span{font-size:.58rem;font-weight:500;white-space:nowrap}
-.mnav-item.active{color:var(--accent)}
+.mobile-nav-inner{display:flex;align-items:center;padding:0 .5rem;min-width:max-content;width:100%;justify-content:space-around}
+.mnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:var(--text3);font-size:1rem;cursor:pointer;padding:.4rem .6rem;transition:color .2s;font-family:var(--font);flex-shrink:0;min-width:52px}
+.mnav-item span{font-size:.55rem;font-weight:600;white-space:nowrap;letter-spacing:.5px}
+.mnav-item.active{color:var(--gold)}
+.mnav-plus{width:40px;height:40px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--bg);font-weight:900;margin-top:-12px;flex-shrink:0;border:none;cursor:pointer;font-family:var(--font)}
 
 /* PAGES */
 .page{display:none}.page.active{display:block;animation:fadeIn .3s ease}
@@ -136,58 +148,461 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 
 /* PAGE HEADER */
 .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem}
-.page-sup{color:var(--accent);font-size:.75rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:.2rem}
-.page-title{font-family:var(--font-display);font-size:2rem;font-weight:800;letter-spacing:-1px}
+.page-sup{color:var(--gold);font-size:.75rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:.2rem}
+.page-title{font-family:var(--font);font-size:2rem;font-weight:800;letter-spacing:-1px}
 
 /* CARDS */
 .cards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:1.5rem}
 .card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;transition:transform .2s}
 .card:hover{transform:translateY(-2px)}
-.card--accent{border-color:var(--accent);background:rgba(232,197,71,.06)}
-.card--warn{border-color:var(--accent2);background:rgba(240,165,0,.06)}
+.card--accent{border-color:var(--gold);background:rgba(232,197,71,.06)}
+.card--warn{border-color:var(--gold);background:rgba(240,165,0,.06)}
 .card--danger{border-color:var(--red);background:var(--red-dim)}
 .card-label{font-size:.72rem;color:var(--text2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:.5rem}
-.card-value{font-family:var(--font-display);font-size:1.5rem;font-weight:800;margin-bottom:.25rem}
+.card-value{font-family:var(--font);font-size:1.5rem;font-weight:800;margin-bottom:.25rem}
 .card-sub{font-size:.72rem;color:var(--text3)}
 .green{color:var(--green)}.red{color:var(--red)}
 
+/* PAGES */
+.page{display:none}.page.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* PAGE HEADER */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.25rem}
+.page-sup{color:var(--gold);font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:.2rem}
+.page-title{font-family:var(--font);font-size:1.75rem;font-weight:800;letter-spacing:-1px;color:var(--text)}
+
+/* GOLD SEPARATOR */
+.gold-line{height:1px;background:linear-gradient(90deg,transparent,rgba(201,165,53,.4),transparent);margin:.75rem 0}
+
+/* CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;margin-bottom:1.25rem}
+.card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.1rem;transition:border-color .2s;position:relative;overflow:hidden}
+.card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,165,53,.15),transparent)}
+.card:hover{border-color:var(--border2)}
+.card--accent{border-color:rgba(201,165,53,.3);background:rgba(201,165,53,.04)}
+.card--accent::after{background:linear-gradient(90deg,transparent,rgba(201,165,53,.4),transparent)}
+.card--warn{border-color:rgba(192,80,80,.25);background:var(--red-dim)}
+.card--danger{border-color:rgba(192,80,80,.4);background:var(--red-dim)}
+.card-label{font-size:.65rem;color:var(--text3);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:.4rem}
+.card-value{font-family:var(--font);font-size:1.4rem;font-weight:800;letter-spacing:-.5px;margin-bottom:.2rem}
+.card-sub{font-size:.65rem;color:var(--text3)}
+.green{color:var(--green)}.red{color:var(--red)}.gold{color:var(--gold)}
+
 /* SECTION */
-.section-block{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
+.section-block{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:.85rem;position:relative;overflow:hidden}
+.section-block::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,165,53,.1),transparent)}
 .section-head{display:flex;justify-content:space-between;align-items:center}
-.section-title{font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:.75rem}
-.section-desc{font-size:.8rem;color:var(--text2);margin-bottom:1rem;line-height:1.6}
-.link-btn{background:none;border:none;color:var(--accent);font-size:.8rem;cursor:pointer}
+.section-title{font-family:var(--font);font-size:.875rem;font-weight:700;margin-bottom:.75rem;color:var(--text)}
+.section-desc{font-size:.78rem;color:var(--text2);margin-bottom:.85rem;line-height:1.6}
+.link-btn{background:none;border:none;color:var(--gold);font-size:.78rem;cursor:pointer;font-family:var(--font);font-weight:600}
+
+/* CHECKIN */
+.checkin-banner{display:flex;align-items:center;justify-content:space-between;background:var(--gold-dim);border:1px solid rgba(201,165,53,.25);border-radius:var(--radius-sm);padding:.75rem 1rem;margin-bottom:.85rem;font-size:.82rem}
+.checkin-btn{background:var(--gold);color:var(--bg);border:none;border-radius:6px;padding:.4rem .9rem;font-weight:700;font-size:.78rem;cursor:pointer;font-family:var(--font)}
+
+/* STREAK */
+.streak-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:.85rem}
+.streak-item{text-align:center}
+.streak-count{font-family:var(--font);font-size:1.3rem;font-weight:800;letter-spacing:-.5px}
+.streak-label{font-size:.62rem;color:var(--text3);margin-top:.2rem;letter-spacing:.5px;text-transform:uppercase}
+
+/* BUTTONS */
+.add-btn{background:var(--gold);color:var(--bg);border:none;border-radius:var(--radius-xs);padding:.55rem 1.1rem;font-weight:700;font-size:.82rem;cursor:pointer;font-family:var(--font);transition:opacity .2s;letter-spacing:.3px}
+.add-btn:hover{opacity:.85}
+.del-btn{background:none;border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:.25rem .5rem;font-size:.72rem;cursor:pointer;transition:all .2s;font-family:var(--font)}
+.del-btn:hover{border-color:var(--gold);color:var(--gold)}
+.cancel-btn{background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:.6rem 1.1rem;font-size:.85rem;cursor:pointer;font-family:var(--font)}
+.confirm-btn{background:var(--gold);color:var(--bg);border:none;border-radius:var(--radius-xs);padding:.6rem 1.2rem;font-size:.85rem;font-weight:700;cursor:pointer;font-family:var(--font)}
+.save-btn{background:var(--gold);color:var(--bg);border:none;border-radius:var(--radius-xs);padding:.55rem 1.1rem;font-size:.85rem;font-weight:700;cursor:pointer;font-family:var(--font);width:100%;margin-top:.5rem}
+
+/* TRANSACTIONS */
+.tx-list{display:flex;flex-direction:column;gap:.4rem}
+.tx-item{display:flex;align-items:center;gap:.85rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.8rem .9rem;cursor:pointer;transition:border-color .2s}
+.tx-item:hover{border-color:var(--border2)}
+.tx-item.gambling{border-left:2px solid var(--red)}
+.tx-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tx-info{flex:1}.tx-desc{font-size:.875rem;font-weight:600;color:var(--text)}
+.tx-meta{font-size:.68rem;color:var(--text3);margin-top:1px;letter-spacing:.3px}
+.tx-amount{font-family:var(--font);font-weight:700;font-size:.95rem}
+.empty-state{color:var(--text3);font-size:.85rem;text-align:center;padding:2rem;letter-spacing:.3px}
+
+/* FILTER */
+.filter-bar{display:flex;gap:.4rem;margin-bottom:.85rem;flex-wrap:wrap}
+.filter-btn{padding:.35rem .85rem;border-radius:20px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:.75rem;cursor:pointer;transition:all .2s;font-family:var(--font);font-weight:500}
+.filter-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700}
+
+/* BUDGET */
+.zb-summary{background:var(--gold-dim);border:1px solid rgba(201,165,53,.2);border-radius:var(--radius-sm);padding:.85rem;margin-bottom:.85rem}
+.zb-row{display:flex;justify-content:space-between;font-size:.82rem;padding:.2rem 0}
+.zb-tip{font-size:.75rem;color:var(--text2);margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.budget-list{display:flex;flex-direction:column;gap:.65rem}
+.budget-item{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1.1rem}
+.budget-head{display:flex;justify-content:space-between;margin-bottom:.65rem}
+.budget-name{font-weight:600;font-size:.875rem}
+.budget-amounts{font-size:.75rem;color:var(--text2);margin-bottom:.65rem}
+.progress-bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;border-radius:2px;background:var(--green);transition:width .5s ease}
+.progress-fill.warn{background:var(--gold)}.progress-fill.danger{background:var(--red)}
+
+/* DEBT */
+.debt-strategy-tabs{display:flex;gap:.6rem;margin-bottom:.85rem}
+.strat-tab{flex:1;padding:.55rem;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:var(--radius-sm);cursor:pointer;font-size:.82rem;transition:all .2s;font-family:var(--font)}
+.strat-tab.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700}
+.strategy-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.85rem;margin-bottom:.85rem;font-size:.82rem;color:var(--text2);line-height:1.6}
+.debt-list{display:flex;flex-direction:column;gap:.65rem;margin-bottom:1.25rem}
+.debt-summary-bar{display:flex;justify-content:space-between;background:var(--bg3);border-radius:var(--radius-sm);padding:.65rem .85rem;margin-bottom:.65rem;font-size:.82rem}
+.debt-item{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1.1rem}
+.debt-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem}
+.debt-name{font-weight:700;font-size:.9rem}
+.debt-rate{font-size:.68rem;color:var(--red);background:var(--red-dim);padding:2px 8px;border-radius:20px;border:1px solid rgba(192,80,80,.2)}
+.debt-amounts{display:flex;justify-content:space-between;font-size:.82rem;color:var(--text2);margin-bottom:.65rem;flex-wrap:wrap;gap:.25rem}
+.debt-simulator{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem}
+.sim-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;gap:.85rem}
+.sim-row label{font-size:.82rem;color:var(--text2)}
+.sim-input{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-xs);padding:.55rem .75rem;font-size:.875rem;font-family:var(--font);width:150px}
+.sim-input:focus{outline:1px solid var(--gold);border-color:var(--gold)}
+.sim-result{background:var(--bg3);border-radius:var(--radius-sm);padding:.85rem;font-size:.82rem;line-height:1.8;color:var(--text2)}
+.sim-result strong{color:var(--gold);font-family:var(--font)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px)}
+.modal-overlay.hidden{display:none}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:1.5rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem}
+.modal-header h3{font-family:var(--font);font-size:1rem;font-weight:700;color:var(--text)}
+.modal-close{background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;font-family:var(--font)}
+.modal-body{display:flex;flex-direction:column;gap:.6rem}
+.modal-input{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-xs);padding:.7rem .9rem;font-size:.875rem;width:100%;font-family:var(--font);transition:border-color .2s}
+.modal-input:focus{outline:none;border-color:var(--gold)}
+.modal-label{font-size:.72rem;color:var(--text3);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:.25rem}
+.modal-footer{display:flex;gap:.65rem;margin-top:.85rem}
+.modal-footer .cancel-btn,.modal-footer .confirm-btn{flex:1}
+
+/* TYPE TOGGLE */
+.type-toggle{display:flex;gap:.4rem;margin-bottom:.65rem}
+.type-btn{flex:1;padding:.55rem;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:var(--radius-xs);cursor:pointer;font-size:.8rem;font-family:var(--font);font-weight:500;transition:all .2s}
+.type-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700}
+.type-btn.danger.active{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(var(--mob-nav-h) + 1rem);left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--gold);color:var(--text);padding:.65rem 1.2rem;border-radius:var(--radius-sm);font-size:.82rem;z-index:500;white-space:nowrap;font-family:var(--font);font-weight:500}
+.toast-success{border-left-color:var(--green)}
+
+/* GOALS */
+.goal-item{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1.1rem;margin-bottom:.65rem}
+.goal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.goal-name{font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:.4rem}
+.goal-amounts{font-size:.78rem;color:var(--text2);margin-bottom:.5rem;display:flex;justify-content:space-between}
+.goal-deadline{font-size:.68rem;color:var(--text3)}
+
+/* HABITS */
+.habits-list{display:flex;flex-direction:column;gap:.5rem}
+.habit-item{display:flex;align-items:center;gap:.85rem;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.8rem .9rem;transition:border-color .2s}
+.habit-item.done{border-color:var(--green);background:var(--green-dim)}
+.habit-icon{font-size:1.2rem;flex-shrink:0}
+.habit-info{flex:1}.habit-name{font-size:.875rem;font-weight:600}
+.habit-streak{font-size:.68rem;color:var(--text3);margin-top:2px}
+.habit-check{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border);background:none;color:var(--text);font-size:.85rem;cursor:pointer;transition:all .2s;flex-shrink:0;font-family:var(--font)}
+.habit-check.checked{background:var(--green);border-color:var(--green);color:#fff}
+
+/* DISCIPLINE */
+.gambling-limit-status{font-size:.82rem;color:var(--text2)}
+.gambling-warn{background:var(--red-dim);border:1px solid rgba(192,80,80,.3);border-radius:var(--radius-sm);padding:.85rem;display:flex;gap:.85rem;align-items:flex-start}
+.gambling-warn.hidden{display:none}
+.countdown-circle{width:44px;height:44px;border-radius:50%;border:2px solid var(--red);display:flex;align-items:center;justify-content:center;font-family:var(--font);font-weight:800;font-size:1rem;flex-shrink:0;color:var(--red)}
+.urge-item{display:flex;align-items:center;gap:.75rem;background:var(--bg3);border-radius:8px;padding:.65rem .85rem;margin-bottom:.35rem}
+.urge-emoji{font-size:1.2rem;flex-shrink:0}
+.urge-info{flex:1}.urge-desc{font-size:.82rem;font-weight:500}
+.urge-date{font-size:.68rem;color:var(--text3)}
+.trigger-chart{display:grid;grid-template-columns:repeat(7,1fr);gap:.25rem;align-items:flex-end;height:80px}
+.trigger-day{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.trigger-bar{width:100%;border-radius:3px 3px 0 0;background:var(--bg3);transition:height .3s}
+.trigger-bar.has-data{background:var(--gold)}
+.trigger-day>span{font-size:.6rem;color:var(--text3)}
+.tip-card{background:var(--gold-dim);border:1px solid rgba(201,165,53,.15);border-radius:8px;padding:.75rem;font-size:.82rem;line-height:1.6;color:var(--text2);margin-bottom:.5rem}
+.reflection-input{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-xs);padding:.75rem;font-size:.875rem;width:100%;font-family:var(--font);min-height:100px;resize:vertical;line-height:1.6}
+.reflection-input:focus{outline:none;border-color:var(--gold)}
+.whatif-box{background:var(--red-dim);border:1px solid rgba(192,80,80,.25);border-radius:8px;padding:.85rem;font-size:.82rem;line-height:1.8;color:var(--text2)}
+
+/* INVESTMENT */
+.risk-tabs{display:flex;gap:.5rem;margin-bottom:.85rem}
+.risk-tab{flex:1;padding:.5rem;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:var(--radius-xs);cursor:pointer;font-size:.78rem;font-family:var(--font);transition:all .2s}
+.risk-tab.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700}
+.risk-advice{background:var(--gold-dim);border:1px solid rgba(201,165,53,.15);border-radius:var(--radius-sm);padding:.85rem;margin-bottom:.85rem;font-size:.82rem;color:var(--text2);line-height:1.6}
+.portfolio-list{display:flex;flex-direction:column;gap:.5rem}
+.portfolio-item{display:flex;align-items:center;gap:.75rem;background:var(--bg3);border-radius:var(--radius-sm);padding:.75rem .9rem}
+.portfolio-type{font-size:1.3rem;flex-shrink:0}
+.portfolio-info{flex:1}.portfolio-name{font-size:.875rem;font-weight:600}
+.portfolio-invested{font-size:.72rem;color:var(--text3)}
+.portfolio-value{font-size:.9rem;font-weight:700;text-align:right}
+.portfolio-pnl{font-size:.7rem;text-align:right;margin-top:1px}
+.portfolio-donut{display:flex;justify-content:center;margin-top:.75rem}
+.finlit-cards{display:flex;flex-direction:column;gap:.5rem}
+.finlit-card{background:var(--bg3);border-radius:8px;padding:.85rem;font-size:.82rem;line-height:1.6}
+.finlit-title{font-weight:700;color:var(--gold);margin-bottom:.35rem;font-size:.85rem}
+.finlit-body{color:var(--text2)}
+.alert-item{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.8rem .9rem;margin-bottom:.4rem}
+.alert-item.alert-triggered{border-color:var(--green)}
+.alert-name{font-weight:600;font-size:.875rem}
+.alert-meta{font-size:.68rem;color:var(--text3);margin-top:2px}
+
+/* REPORTS */
+.month-selector{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding:.75rem 1rem;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-sm)}
+.month-selector button{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:.9rem;font-family:var(--font)}
+.comparison-chart{display:flex;flex-direction:column;gap:.35rem}
+.report-cat-item{display:flex;align-items:center;gap:.75rem;font-size:.8rem;margin-bottom:.35rem}
+.report-cat-name{min-width:120px;color:var(--text2);font-size:.75rem}
+.report-cat-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.report-cat-fill{height:100%;background:var(--gold);border-radius:3px;transition:width .5s}
+.report-cat-val{min-width:70px;text-align:right;font-size:.75rem;font-weight:600;color:var(--text)}
+.report-categories{display:flex;flex-direction:column}
+
+/* KASA */
+.stok-list{display:flex;flex-direction:column;gap:.45rem}
+.stok-item{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.8rem .9rem}
+.stok-item.stok-warn{border-color:var(--gold);background:var(--gold-dim)}
+.stok-name{font-weight:600;font-size:.875rem}
+.stok-meta{font-size:.68rem;color:var(--text3);margin-top:2px}
+.stok-badge{background:var(--gold);color:var(--bg);font-size:.68rem;padding:2px 8px;border-radius:20px;font-weight:700}
+.kasa-val{font-family:var(--font);font-size:1.4rem;font-weight:800;letter-spacing:-.5px}
+
+/* REGRET */
+.regret-item{display:flex;align-items:center;gap:.75rem;background:var(--bg3);border-radius:8px;padding:.65rem .85rem;margin-bottom:.35rem}
+.regret-emoji{font-size:1.2rem;flex-shrink:0}
+.regret-info{flex:1}.regret-tx{font-size:.82rem;font-weight:500}
+.regret-score-text{font-size:.68rem;color:var(--text3);margin-top:1px}
+.regret-stars{display:flex;flex-direction:column;gap:.35rem}
+.star-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:.6rem .85rem;cursor:pointer;font-size:.82rem;text-align:left;transition:all .2s;font-family:var(--font)}
+.star-btn.selected,.star-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ACADEMY */
+.academy-list{display:flex;flex-direction:column;gap:.5rem}
+.academy-card{display:flex;align-items:center;gap:.85rem;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.85rem 1rem;transition:border-color .2s}
+.academy-card.done{border-color:var(--green);opacity:.75}
+.academy-icon{font-size:1.5rem;flex-shrink:0}
+.academy-info{flex:1}
+.academy-title{font-size:.875rem;font-weight:600;color:var(--text)}
+.academy-meta{font-size:.68rem;color:var(--text3);margin-top:2px}
+.academy-btn{background:var(--gold);color:var(--bg);border:none;border-radius:6px;padding:.4rem .85rem;font-size:.75rem;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap}
+.lesson-content h4{font-family:var(--font);font-weight:700;margin-bottom:.5rem;margin-top:.85rem;color:var(--gold);font-size:.9rem}
+.lesson-content p{font-size:.82rem;color:var(--text2);line-height:1.7;margin-bottom:.5rem}
+.lesson-content ul{padding-left:1.25rem;font-size:.82rem;color:var(--text2);line-height:1.8}
+.lesson-content strong{color:var(--text);font-weight:600}
+
+/* BADGES */
+.badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:.65rem}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.65rem .4rem;background:var(--bg3);border-radius:var(--radius-sm);border:1px solid var(--border);text-align:center;transition:transform .2s}
+.badge-item.earned{border-color:rgba(201,165,53,.4);background:var(--gold-dim)}
+.badge-item.earned:hover{transform:translateY(-2px)}
+.badge-icon{font-size:1.5rem}
+.badge-name{font-size:.6rem;font-weight:600;color:var(--text3);letter-spacing:.3px}
+
+/* CASHFLOW */
+.cf-table{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;width:100%}
+.cf-header{display:grid;grid-template-columns:80px 1fr 1fr 1fr;gap:.4rem;padding:.65rem .9rem;background:var(--bg3);font-size:.68rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+.cf-row{display:grid;grid-template-columns:80px 1fr 1fr 1fr;gap:.4rem;padding:.65rem .9rem;border-top:1px solid var(--border);font-size:.82rem}
+.cf-row:hover{background:var(--bg3)}
+
+/* SOHBET */
+.sohbet-btn{position:fixed;bottom:calc(var(--mob-nav-h) + 1rem);right:1rem;width:48px;height:48px;border-radius:50%;background:var(--gold);color:var(--bg);border:none;font-size:1.3rem;cursor:pointer;z-index:150;display:flex;align-items:center;justify-content:center;font-family:var(--font)}
+.sohbet-panel{position:fixed;bottom:calc(var(--mob-nav-h) + 4.5rem);right:1rem;width:min(360px,calc(100vw - 2rem));background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);z-index:150;display:flex;flex-direction:column;max-height:480px;overflow:hidden}
+.sohbet-panel.hidden{display:none}
+.sohbet-header{display:flex;justify-content:space-between;align-items:center;padding:.65rem .9rem;border-bottom:1px solid var(--border);background:var(--bg3)}
+.sohbet-header h4{font-family:var(--font);font-size:.875rem;font-weight:700;color:var(--text)}
+.sohbet-kapat{background:none;border:none;color:var(--text2);font-size:1rem;cursor:pointer}
+.sohbet-mesajlar{flex:1;overflow-y:auto;padding:.65rem;display:flex;flex-direction:column;gap:.45rem;min-height:150px}
+.sohbet-msg{padding:.55rem .8rem;border-radius:10px;font-size:.78rem;line-height:1.6;max-width:92%}
+.sohbet-msg.ai{background:var(--bg3);border:1px solid var(--border);align-self:flex-start;color:var(--text2)}
+.sohbet-msg.user{background:var(--gold);color:var(--bg);align-self:flex-end;font-weight:600}
+.sohbet-input-row{display:flex;gap:.45rem;padding:.55rem .65rem;border-top:1px solid var(--border)}
+.sohbet-input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:.45rem .7rem;font-size:.82rem;font-family:var(--font)}
+.sohbet-input:focus{outline:none;border-color:var(--gold)}
+.sohbet-gonder{background:var(--gold);color:var(--bg);border:none;border-radius:8px;padding:.45rem .8rem;font-weight:700;font-size:.82rem;cursor:pointer;font-family:var(--font)}
+
+/* FREN */
+.fren-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;padding:1.5rem;backdrop-filter:blur(8px)}
+.fren-box{background:var(--bg2);border:1px solid rgba(201,165,53,.3);border-radius:var(--radius);padding:1.75rem;max-width:400px;width:100%;text-align:center}
+.fren-timer{font-family:var(--font);font-size:2.5rem;font-weight:800;color:var(--gold);margin:1rem 0;letter-spacing:-1px}
+
+/* STOK MODAL / YAŞAM */
+.checkin-soru{background:var(--bg3);border-radius:var(--radius-sm);padding:.85rem;margin-bottom:.65rem;font-size:.875rem}
+
+/* YENİ TAB BAR */
+.yeni-tab-bar{display:flex;gap:.35rem;margin-bottom:1rem;flex-wrap:wrap}
+.yeni-tab{padding:.4rem .9rem;border-radius:20px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:.75rem;cursor:pointer;transition:all .2s;font-family:var(--font);font-weight:500}
+.yeni-tab.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700}
+.yeni-panel{display:none}.yeni-panel.active{display:block;animation:fadeIn .2s ease}
+.ic-check-item{display:flex;align-items:center;gap:.65rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.7rem .9rem;cursor:pointer;transition:all .2s;font-size:.82rem;margin-bottom:.35rem}
+.ic-check-item:hover{border-color:var(--gold)}.ic-check-item.checked{opacity:.6;text-decoration:line-through;border-color:var(--green)}
+.ic-box{font-size:.9rem;flex-shrink:0;min-width:16px}
+.piyasa-kart{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.8rem .9rem;margin-bottom:.45rem}
+.piyasa-kart-aciklama{font-size:.75rem;color:var(--text2);line-height:1.6;margin-top:.25rem}
+.mc-item{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.6rem .9rem;font-size:.82rem;margin-bottom:.35rem}
+.okr-item{display:flex;align-items:center;gap:.65rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.6rem .9rem;margin-bottom:.35rem}
+.okr-item.done .okr-text{text-decoration:line-through;opacity:.6}
+.okr-text{flex:1;font-size:.82rem}
+
+/* BORÇ ÖLDÜR / BIRIKIM */
+.borc-odur-bar{height:14px;background:var(--bg3);border-radius:7px;overflow:hidden;margin:.45rem 0}
+.borc-odur-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:7px;transition:width .6s ease}
+.haftalik-kart{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin-bottom:.35rem;font-size:.82rem;line-height:1.6}
+.birikim-badge{display:inline-block;background:var(--green-dim);color:var(--green);border:1px solid rgba(74,158,92,.3);border-radius:20px;padding:2px 10px;font-size:.68rem;font-weight:700}
+
+/* STRATEJİ */
+.strategy-steps-title{font-size:.72rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.65rem}
+.debt-priority{border:1.5px solid var(--gold)!important;background:var(--gold-dim)}
+.debt-step-badge{font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:.45rem}
+.debt-priority .debt-step-badge{background:var(--gold);color:var(--bg)}
+.debt-item:not(.debt-priority) .debt-step-badge{background:var(--bg3);color:var(--text3)}
+.debt-tip{margin-top:.55rem;font-size:.75rem;color:var(--gold);background:var(--gold-dim);padding:.45rem .7rem;border-radius:6px;border-left:2px solid var(--gold)}
+.debt-tip-muted{margin-top:.35rem;font-size:.7rem;color:var(--text3)}
+.restructure-item{background:var(--red-dim);border:1px solid rgba(192,80,80,.25);border-radius:var(--radius-sm);padding:.8rem;margin-bottom:.45rem;font-size:.82rem}
+
+/* PORTFOLIO CHART */
+.portfolio-donut svg text{font-family:var(--font)!important}
+
+/* FINANS OKULU */
+.modal-overlay .modal{border-radius:20px 20px 0 0}
+
+/* RESPONSIVE — iPhone 11 (414px) özel */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .mobile-nav{display:flex}
+  .main{margin-left:0;padding:1rem .9rem}
+
+  /* Daha büyük okunabilir fontlar */
+  .card-value{font-size:1.5rem}
+  .card-label{font-size:.7rem}
+  .page-title{font-size:1.5rem}
+  .section-title{font-size:.95rem}
+  .tx-desc{font-size:.92rem}
+  .tx-meta{font-size:.72rem}
+
+  /* Kartlar tam genişlik — 2 sütun yeter */
+  .cards-grid{grid-template-columns:repeat(2,1fr);gap:.6rem}
+
+  /* Modal alttan tam ekran */
+  .modal-overlay{align-items:flex-end}
+  .modal{border-radius:20px 20px 0 0;max-height:88vh;width:100%;padding:1.25rem 1rem 1.5rem}
+
+  /* Buton boyutları parmak dostu */
+  .add-btn{padding:.7rem 1.1rem;font-size:.875rem;min-height:var(--touch)}
+  .confirm-btn,.cancel-btn{padding:.75rem;font-size:.9rem;min-height:var(--touch)}
+  .modal-input{padding:.8rem .9rem;font-size:16px;min-height:var(--touch)}
+  select.modal-input{min-height:var(--touch)}
+
+  /* Alt nav butonları */
+  .mnav-item{min-width:60px;padding:.5rem .4rem}
+  .mnav-item span{font-size:.62rem}
+  .mnav-plus{width:46px;height:46px;font-size:24px;margin-top:-14px}
+
+  /* Section padding küçük ekranda */
+  .section-block{padding:.9rem 1rem}
+  .card{padding:.85rem .9rem}
+
+  /* Tablo/cashflow yatay scroll */
+  .cf-table{overflow-x:auto;display:block}
+
+  /* İşlerim sekmeleri kaydırılabilir */
+  .yeni-tab-bar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:.25rem}
+  .yeni-tab-bar::-webkit-scrollbar{display:none}
+  .yeni-tab{flex-shrink:0}
+
+  /* Borç strategy tabları */
+  .debt-strategy-tabs{gap:.4rem}
+  .strat-tab{font-size:.8rem;padding:.55rem .4rem}
+
+  /* Menü grid */
+  #page-menu .cards-grid-menu > div{min-height:72px}
+
+  /* Büyük sayılar */
+  .bal-amount,.big-num,.hero-amount{font-size:2.2rem}
+
+  /* Streak bar */
+  .streak-count{font-size:1.2rem}
+  .streak-label{font-size:.62rem}
+
+  /* Badge grid */
+  .badge-grid{grid-template-columns:repeat(4,1fr)}
+
+  /* Sohbet paneli */
+  .sohbet-panel{width:calc(100vw - 1.5rem);right:.75rem}
+
+  /* Filter bar kaydırılabilir */
+  .filter-bar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:.25rem}
+  .filter-bar::-webkit-scrollbar{display:none}
+  .filter-btn{flex-shrink:0}
+
+  /* Takvim item */
+  .takvim-item{padding:.75rem .85rem}
+  .takvim-gun{font-size:1.2rem}
+
+  /* Proje kartları */
+  .proj-item{padding:.9rem}
+  .proj-client{font-size:1rem}
+
+  /* İşlem listesi */
+  .tx-item{padding:.85rem .9rem}
+  .tx-amount{font-size:1rem}
+}
+
+@media(min-width:769px){
+  .mobile-nav{display:flex}
+  .main{margin-left:0;padding:1.5rem 2rem;max-width:720px;margin:0 auto}
+}
+
+/* Comparison chart */
+.comparison-bar-wrap{display:flex;flex-direction:column;gap:.25rem;margin-bottom:.5rem}
+.cb-label{font-size:.72rem;color:var(--text2);min-width:50px}
+.cb-bar-row{display:flex;align-items:center;gap:.5rem}
+.cb-bar{height:6px;border-radius:3px;min-width:2px;transition:width .5s}
+.cb-val{font-size:.7rem;color:var(--text3)}
+
+/* TAKVIM / TARİH */
+.odeme-takvim{display:flex;flex-direction:column;gap:.4rem}
+.takvim-item{display:flex;align-items:center;gap:.75rem;background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:var(--radius-sm);padding:.7rem .9rem}
+.takvim-item.urgent{border-left-color:var(--red);background:var(--red-dim)}
+.takvim-item.soon{border-left-color:var(--gold);background:var(--gold-dim)}
+.takvim-item.ok{border-left-color:var(--green)}
+.takvim-gun{font-family:var(--font);font-weight:800;font-size:1.1rem;min-width:28px;text-align:center;line-height:1}
+.takvim-ay{font-size:.62rem;color:var(--text3);text-align:center;text-transform:uppercase;letter-spacing:.5px}
+.takvim-body{flex:1}
+.takvim-name{font-size:.85rem;font-weight:600;color:var(--text)}
+.takvim-sub{font-size:.68rem;color:var(--text3);margin-top:1px}
+.takvim-tutar{font-size:.9rem;font-weight:700;text-align:right}
+
 
 /* CHECKIN */
 .checkin-banner{display:flex;align-items:center;justify-content:space-between;background:rgba(232,197,71,.08);border:1px solid rgba(232,197,71,.3);border-radius:var(--radius-sm);padding:.75rem 1rem;margin-bottom:1rem;font-size:.85rem}
-.checkin-btn{background:var(--accent);color:#000;border:none;border-radius:8px;padding:.4rem .9rem;font-weight:700;font-size:.8rem;cursor:pointer}
+.checkin-btn{background:var(--gold);color:#000;border:none;border-radius:8px;padding:.4rem .9rem;font-weight:700;font-size:.8rem;cursor:pointer}
 
 /* STREAK */
 .streak-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
 .streak-item{text-align:center}
-.streak-count{font-family:var(--font-display);font-size:1.4rem;font-weight:800}
+.streak-count{font-family:var(--font);font-size:1.4rem;font-weight:800}
 .streak-label{font-size:.68rem;color:var(--text2);margin-top:.25rem}
 
 /* BUTTONS */
-.add-btn{background:var(--accent);color:#000;border:none;border-radius:var(--radius-sm);padding:.6rem 1.2rem;font-weight:700;font-size:.85rem;cursor:pointer;font-family:var(--font-body);transition:opacity .2s}
+.add-btn{background:var(--gold);color:#000;border:none;border-radius:var(--radius-sm);padding:.6rem 1.2rem;font-weight:700;font-size:.85rem;cursor:pointer;font-family:var(--font);transition:opacity .2s}
 .add-btn:hover{opacity:.85}
 .del-btn{background:none;border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:.25rem .5rem;font-size:.75rem;cursor:pointer;transition:all .2s}
-.del-btn:hover{border-color:var(--accent);color:var(--accent)}
+.del-btn:hover{border-color:var(--gold);color:var(--gold)}
 
 /* TRANSACTIONS */
 .tx-list{display:flex;flex-direction:column;gap:.5rem}
 .tx-item{display:flex;align-items:center;gap:1rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.85rem 1rem;cursor:pointer;transition:border-color .2s}
-.tx-item:hover{border-color:var(--accent)}
+.tx-item:hover{border-color:var(--gold)}
 .tx-item.gambling{border-left:3px solid var(--red)}
 .tx-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .tx-info{flex:1}.tx-desc{font-size:.9rem;font-weight:500}
-.tx-meta{font-size:.72rem;color:var(--text2)}.tx-amount{font-family:var(--font-display);font-weight:700;font-size:1rem}
+.tx-meta{font-size:.72rem;color:var(--text2)}.tx-amount{font-family:var(--font);font-weight:700;font-size:1rem}
 .empty-state{color:var(--text3);font-size:.9rem;font-style:italic;text-align:center;padding:2rem}
 
 /* FILTER */
 .filter-bar{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
 .filter-btn{padding:.4rem .9rem;border-radius:20px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:.8rem;cursor:pointer;transition:all .2s}
-.filter-btn.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600}
+.filter-btn.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:600}
 
 /* BUDGET - ZERO BASED */
 .zb-summary{background:rgba(232,197,71,.05);border:1px solid rgba(232,197,71,.2);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem}
@@ -200,12 +615,12 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 .budget-amounts{font-size:.8rem;color:var(--text2);margin-bottom:.75rem}
 .progress-bar{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
 .progress-fill{height:100%;border-radius:4px;background:var(--green);transition:width .5s ease}
-.progress-fill.warn{background:var(--accent2)}.progress-fill.danger{background:var(--red)}
+.progress-fill.warn{background:var(--gold)}.progress-fill.danger{background:var(--red)}
 
 /* DEBT */
 .debt-strategy-tabs{display:flex;gap:.75rem;margin-bottom:1rem}
 .strat-tab{flex:1;padding:.6rem;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:var(--radius-sm);cursor:pointer;font-size:.85rem;transition:all .2s}
-.strat-tab.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+.strat-tab.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700}
 .strategy-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem;font-size:.85rem;color:var(--text2);line-height:1.6}
 .debt-list{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.5rem}
 .debt-summary-bar{display:flex;justify-content:space-between;background:var(--bg3);border-radius:var(--radius-sm);padding:.75rem 1rem;margin-bottom:.75rem;font-size:.85rem}
@@ -217,9 +632,9 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 .debt-simulator{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
 .sim-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:1rem}
 .sim-row label{font-size:.85rem;color:var(--text2)}
-.sim-input{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);padding:.6rem .8rem;font-size:.9rem;width:150px;font-family:var(--font-body)}
+.sim-input{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);padding:.6rem .8rem;font-size:.9rem;width:150px;font-family:var(--font)}
 .sim-result{background:var(--bg3);border-radius:var(--radius-sm);padding:1rem;font-size:.85rem;line-height:1.8;color:var(--text2)}
-.sim-result strong{color:var(--accent);font-family:var(--font-display)}
+.sim-result strong{color:var(--gold);font-family:var(--font)}
 
 /* CASHFLOW */
 .cf-table{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
@@ -256,24 +671,24 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 .regret-emoji{font-size:1.3rem}.regret-info{flex:1}
 .regret-tx{font-size:.85rem;font-weight:500}.regret-score-text{font-size:.7rem;color:var(--text2)}
 .tip-card{background:rgba(232,197,71,.08);border:1px solid rgba(232,197,71,.3);border-radius:var(--radius-sm);padding:1rem;font-size:.9rem;line-height:1.6}
-.reflection-input{width:100%;min-height:100px;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);padding:.75rem;font-size:.9rem;font-family:var(--font-body);resize:vertical;margin-bottom:.75rem}
-.save-btn{background:var(--bg3);border:1px solid var(--accent);color:var(--accent);border-radius:var(--radius-sm);padding:.6rem 1.2rem;cursor:pointer;font-size:.85rem;font-weight:600;transition:all .2s}
-.save-btn:hover{background:var(--accent);color:#000}
+.reflection-input{width:100%;min-height:100px;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);padding:.75rem;font-size:.9rem;font-family:var(--font);resize:vertical;margin-bottom:.75rem}
+.save-btn{background:var(--bg3);border:1px solid var(--gold);color:var(--gold);border-radius:var(--radius-sm);padding:.6rem 1.2rem;cursor:pointer;font-size:.85rem;font-weight:600;transition:all .2s}
+.save-btn:hover{background:var(--gold);color:#000}
 
 /* INVESTMENT */
 .risk-tabs{display:flex;gap:.5rem;margin-bottom:1rem}
 .risk-tab{flex:1;padding:.5rem;border-radius:var(--radius-sm);background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:.8rem;cursor:pointer;transition:all .2s}
-.risk-tab.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+.risk-tab.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700}
 .risk-advice{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem;font-size:.85rem;line-height:1.6;color:var(--text2)}
 .portfolio-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
 .portfolio-item{display:flex;align-items:center;gap:1rem;background:var(--bg3);border-radius:var(--radius-sm);padding:.85rem}
 .portfolio-type{font-size:1.3rem}.portfolio-info{flex:1}
 .portfolio-name{font-weight:600;font-size:.9rem}.portfolio-invested{font-size:.72rem;color:var(--text2)}
-.portfolio-value{font-family:var(--font-display);font-weight:700}
+.portfolio-value{font-family:var(--font);font-weight:700}
 .portfolio-pnl{font-size:.72rem;font-weight:600}
 .portfolio-donut{display:flex;justify-content:center;padding:1rem 0}
 .finlit-cards{display:flex;flex-direction:column;gap:.75rem}
-.finlit-card{background:var(--bg3);border-left:3px solid var(--accent);border-radius:var(--radius-sm);padding:1rem}
+.finlit-card{background:var(--bg3);border-left:3px solid var(--gold);border-radius:var(--radius-sm);padding:1rem}
 .finlit-title{font-weight:700;font-size:.9rem;margin-bottom:.4rem}
 .finlit-body{font-size:.82rem;color:var(--text2);line-height:1.6}
 
@@ -281,32 +696,32 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 .academy-list{display:flex;flex-direction:column;gap:.75rem}
 .academy-card{display:flex;align-items:center;gap:1rem;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;transition:border-color .2s}
 .academy-card.done{border-color:var(--green);opacity:.7}
-.academy-card:hover{border-color:var(--accent)}
+.academy-card:hover{border-color:var(--gold)}
 .academy-icon{font-size:1.8rem;flex-shrink:0}
 .academy-info{flex:1}.academy-title{font-weight:700;font-size:.95rem}
 .academy-meta{font-size:.72rem;color:var(--text2);margin-top:2px}
-.academy-btn{background:var(--accent);color:#000;border:none;border-radius:var(--radius-sm);padding:.5rem 1rem;font-weight:700;font-size:.8rem;cursor:pointer;white-space:nowrap}
+.academy-btn{background:var(--gold);color:#000;border:none;border-radius:var(--radius-sm);padding:.5rem 1rem;font-weight:700;font-size:.8rem;cursor:pointer;white-space:nowrap}
 .lesson-content{font-size:.9rem;line-height:1.8;color:var(--text2)}
-.lesson-content h4{color:var(--text);font-family:var(--font-display);margin-bottom:.75rem}
+.lesson-content h4{color:var(--text);font-family:var(--font);margin-bottom:.75rem}
 .lesson-content p{margin-bottom:.75rem}
 .lesson-content ul{padding-left:1.2rem;margin-bottom:.75rem}
 .lesson-content li{margin-bottom:.3rem}
-.lesson-content strong{color:var(--accent)}
+.lesson-content strong{color:var(--gold)}
 
 /* REPORTS */
 .month-selector{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
 .month-selector button{background:var(--bg3);border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:1.2rem}
-#currentMonthLabel{font-family:var(--font-display);font-weight:700;font-size:1.1rem}
+#currentMonthLabel{font-family:var(--font);font-weight:700;font-size:1.1rem}
 .comparison-chart{display:flex;align-items:flex-end;gap:.5rem;height:110px;padding:0 .5rem}
 .comp-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
-.comp-bar{width:100%;border-radius:4px 4px 0 0;background:var(--accent);transition:height .5s;min-height:4px}
+.comp-bar{width:100%;border-radius:4px 4px 0 0;background:var(--gold);transition:height .5s;min-height:4px}
 .comp-bar.expense{background:var(--red)}
 .comp-label{font-size:.6rem;color:var(--text3)}
 .report-categories{display:flex;flex-direction:column;gap:.5rem}
 .report-cat-item{display:flex;align-items:center;gap:.75rem}
 .report-cat-name{width:110px;font-size:.78rem;color:var(--text2)}
 .report-cat-bar{flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
-.report-cat-fill{height:100%;background:var(--accent);border-radius:4px}
+.report-cat-fill{height:100%;background:var(--gold);border-radius:4px}
 .report-cat-val{font-size:.78rem;font-weight:600;width:70px;text-align:right}
 .category-chart{display:flex;flex-direction:column;gap:.5rem}
 
@@ -316,32 +731,32 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 .modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;width:100%;max-width:500px;margin:0 auto;padding:1.5rem;animation:slideUp .3s ease;max-height:90vh;overflow-y:auto}
 @keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
 .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem}
-.modal-header h3{font-family:var(--font-display);font-weight:800;font-size:1.2rem}
+.modal-header h3{font-family:var(--font);font-weight:800;font-size:1.2rem}
 .modal-close{background:none;border:none;color:var(--text2);font-size:1.2rem;cursor:pointer}
 .modal-body{display:flex;flex-direction:column;gap:.75rem}
-.modal-input{width:100%;padding:.8rem 1rem;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);font-size:.9rem;font-family:var(--font-body);transition:border-color .2s}
-.modal-input:focus{outline:none;border-color:var(--accent)}
+.modal-input{width:100%;padding:.8rem 1rem;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);font-size:.9rem;font-family:var(--font);transition:border-color .2s}
+.modal-input:focus{outline:none;border-color:var(--gold)}
 .modal-input option{background:var(--bg3)}
 .modal-label{font-size:.8rem;color:var(--text2);font-weight:500}
 .modal-footer{display:flex;gap:.75rem;margin-top:.5rem}
 .cancel-btn{flex:1;padding:.8rem;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:var(--radius-sm);cursor:pointer;font-size:.9rem}
-.confirm-btn{flex:2;padding:.8rem;background:var(--accent);color:#000;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.9rem;cursor:pointer}
+.confirm-btn{flex:2;padding:.8rem;background:var(--gold);color:#000;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.9rem;cursor:pointer}
 .type-toggle{display:flex;gap:.5rem}
 .type-btn{flex:1;padding:.6rem;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:var(--radius-sm);cursor:pointer;font-size:.78rem;transition:all .2s}
-.type-btn.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+.type-btn.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700}
 .type-btn.danger.active{background:var(--red);border-color:var(--red);color:#fff}
 .gambling-warn{background:var(--red-dim);border:1px solid var(--red);border-radius:var(--radius-sm);padding:1rem;text-align:center;font-size:.85rem;line-height:1.6}
 .gambling-warn.hidden{display:none}
-.countdown-circle{width:60px;height:60px;border:3px solid var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.5rem;font-weight:800;margin:0 auto .75rem;color:var(--red)}
+.countdown-circle{width:60px;height:60px;border:3px solid var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font);font-size:1.5rem;font-weight:800;margin:0 auto .75rem;color:var(--red)}
 .regret-tx-info{background:var(--bg3);border-radius:var(--radius-sm);padding:.75rem;font-size:.85rem;margin-bottom:.5rem}
 .regret-stars{display:flex;flex-direction:column;gap:.5rem}
 .star-btn{padding:.7rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.9rem;cursor:pointer;text-align:left;transition:all .2s}
-.star-btn:hover,.star-btn.selected{border-color:var(--accent);background:rgba(232,197,71,.12)}
+.star-btn:hover,.star-btn.selected{border-color:var(--gold);background:rgba(232,197,71,.12)}
 
 /* TOAST */
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border);padding:.75rem 1.5rem;border-radius:30px;font-size:.85rem;z-index:300;animation:toastIn .3s ease,toastOut .3s ease 2.8s forwards;white-space:nowrap}
 .toast-success{border-color:var(--green);color:var(--green)}
-.toast-warn{border-color:var(--accent2);color:var(--accent2)}
+.toast-warn{border-color:var(--gold);color:var(--gold)}
 @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 @keyframes toastOut{to{opacity:0}}
 
@@ -364,7 +779,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 .kasa-row:last-child{border:none}
 .stok-item{display:flex;align-items:center;gap:1rem;background:var(--bg3);border-radius:var(--radius-sm);padding:.75rem;margin-bottom:.4rem}
 .stok-info{flex:1}.stok-name{font-weight:600;font-size:.9rem}.stok-meta{font-size:.72rem;color:var(--text2)}
-.stok-adet{font-family:var(--font-display);font-weight:700}
+.stok-adet{font-family:var(--font);font-weight:700}
 
 /* ALERTS */
 .alert-item{display:flex;align-items:center;gap:1rem;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.85rem;margin-bottom:.4rem}
@@ -374,27 +789,27 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 /* BADGES */
 .badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:.75rem}
 .badge-item{display:flex;flex-direction:column;align-items:center;gap:.4rem;padding:.75rem .5rem;border-radius:var(--radius-sm);text-align:center;background:var(--bg3);border:1px solid var(--border)}
-.badge-item.earned{border-color:var(--accent);background:rgba(232,197,71,.08)}
+.badge-item.earned{border-color:var(--gold);background:rgba(232,197,71,.08)}
 .badge-icon{font-size:1.8rem}.badge-name{font-size:.68rem;font-weight:600;color:var(--text2);line-height:1.3}
-.badge-item.earned .badge-name{color:var(--accent)}
+.badge-item.earned .badge-name{color:var(--gold)}
 
 /* COACH */
 .coach-category{margin-bottom:1.25rem}
-.coach-cat-title{font-family:var(--font-display);font-weight:700;font-size:.95rem;padding-left:.75rem;margin-bottom:.6rem}
+.coach-cat-title{font-family:var(--font);font-weight:700;font-size:.95rem;padding-left:.75rem;margin-bottom:.6rem}
 .quiz-question{font-size:.9rem;font-weight:600;margin-bottom:.75rem;color:var(--text)}
 .quiz-opts{display:flex;flex-direction:column;gap:.5rem}
-.quiz-opt{padding:.75rem;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);cursor:pointer;text-align:left;font-size:.85rem;font-family:var(--font-body);transition:all .2s}
-.quiz-opt:not(:disabled):hover{border-color:var(--accent);background:rgba(232,197,71,.08)}
+.quiz-opt{padding:.75rem;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);cursor:pointer;text-align:left;font-size:.85rem;font-family:var(--font);transition:all .2s}
+.quiz-opt:not(:disabled):hover{border-color:var(--gold);background:rgba(232,197,71,.08)}
 .quiz-opt:disabled{cursor:default}
 
 /* KASA & STOK */
 .stok-list{display:flex;flex-direction:column;gap:.5rem}
 .stok-item{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.85rem 1rem}
-.stok-item.stok-warn{border-color:var(--accent2);background:rgba(240,165,0,.06)}
+.stok-item.stok-warn{border-color:var(--gold);background:rgba(240,165,0,.06)}
 .stok-name{font-weight:600;font-size:.9rem}
 .stok-meta{font-size:.72rem;color:var(--text2);margin-top:2px}
-.stok-badge{background:var(--accent2);color:#000;font-size:.7rem;padding:2px 8px;border-radius:20px;font-weight:700}
-.kasa-val{font-family:var(--font-display);font-size:1.5rem;font-weight:800}
+.stok-badge{background:var(--gold);color:#000;font-size:.7rem;padding:2px 8px;border-radius:20px;font-weight:700}
+.kasa-val{font-family:var(--font);font-size:1.5rem;font-weight:800}
 
 /* ALERT */
 .alert-item{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.85rem 1rem;margin-bottom:.4rem}
@@ -408,7 +823,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 /* ROZETLER */
 .badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:.75rem}
 .badge-item{display:flex;flex-direction:column;align-items:center;gap:.35rem;padding:.75rem .5rem;background:var(--bg3);border-radius:var(--radius-sm);border:1px solid var(--border);text-align:center;transition:transform .2s}
-.badge-item.earned{border-color:var(--accent);background:rgba(232,197,71,.08)}
+.badge-item.earned{border-color:var(--gold);background:rgba(232,197,71,.08)}
 .badge-item.earned:hover{transform:translateY(-2px)}
 .badge-icon{font-size:1.6rem}
 .badge-name{font-size:.65rem;font-weight:600;color:var(--text2)}
@@ -416,28 +831,28 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 /* QUIZ */
 .quiz-section{margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)}
 .quiz-q{margin-bottom:1.25rem}
-.quiz-opt{display:block;width:100%;text-align:left;padding:.65rem .85rem;margin-bottom:.4rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.85rem;cursor:pointer;transition:all .2s;font-family:var(--font-body)}
-.quiz-opt:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.quiz-opt{display:block;width:100%;text-align:left;padding:.65rem .85rem;margin-bottom:.4rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.85rem;cursor:pointer;transition:all .2s;font-family:var(--font)}
+.quiz-opt:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
 .quiz-opt:disabled{cursor:default}
 
 @media(max-width:768px){.badge-grid{grid-template-columns:repeat(4,1fr)}}
 
 /* BORÇ STRATEJİ */
 .strategy-steps-title{font-size:.8rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem}
-.debt-priority{border:1.5px solid var(--accent)!important;background:rgba(232,197,71,.04)}
+.debt-priority{border:1.5px solid var(--gold)!important;background:rgba(232,197,71,.04)}
 .debt-step-badge{font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:.5rem}
-.debt-priority .debt-step-badge{background:var(--accent);color:#000}
+.debt-priority .debt-step-badge{background:var(--gold);color:#000}
 .debt-item:not(.debt-priority) .debt-step-badge{background:var(--bg3);color:var(--text3)}
-.debt-tip{margin-top:.6rem;font-size:.78rem;color:var(--accent);background:rgba(232,197,71,.08);padding:.5rem .75rem;border-radius:6px;border-left:2px solid var(--accent)}
+.debt-tip{margin-top:.6rem;font-size:.78rem;color:var(--gold);background:rgba(232,197,71,.08);padding:.5rem .75rem;border-radius:6px;border-left:2px solid var(--gold)}
 .debt-tip-muted{margin-top:.4rem;font-size:.73rem;color:var(--text3);font-style:italic}
 
 /* ===== YENİ SEKMELER ===== */
 .yeni-tab-bar{display:flex;gap:.5rem;margin-bottom:1.25rem;flex-wrap:wrap}
-.yeni-tab{padding:.45rem 1rem;border-radius:20px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:.8rem;cursor:pointer;transition:all .2s;font-family:var(--font-body)}
-.yeni-tab.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+.yeni-tab{padding:.45rem 1rem;border-radius:20px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:.8rem;cursor:pointer;transition:all .2s;font-family:var(--font)}
+.yeni-tab.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700}
 .yeni-panel{display:none}.yeni-panel.active{display:block;animation:fadeIn .25s ease}
 .ic-check-item{display:flex;align-items:center;gap:.75rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem 1rem;cursor:pointer;transition:all .2s;font-size:.85rem;margin-bottom:.4rem}
-.ic-check-item:hover{border-color:var(--accent)}.ic-check-item.checked{opacity:.6;text-decoration:line-through;border-color:var(--green)}
+.ic-check-item:hover{border-color:var(--gold)}.ic-check-item.checked{opacity:.6;text-decoration:line-through;border-color:var(--green)}
 .ic-box{font-size:1rem;flex-shrink:0;min-width:16px}
 .piyasa-kart{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.85rem 1rem;margin-bottom:.5rem}
 .piyasa-kart-aciklama{font-size:.78rem;color:var(--text2);line-height:1.6}
@@ -446,27 +861,27 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 .okr-item.done .okr-text{text-decoration:line-through;opacity:.6}
 .okr-text{flex:1;font-size:.85rem}
 .borc-odur-bar{height:18px;background:var(--bg3);border-radius:9px;overflow:hidden;margin:.5rem 0}
-.borc-odur-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--accent));border-radius:9px;transition:width .6s ease}
+.borc-odur-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:9px;transition:width .6s ease}
 .haftalik-kart{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.85rem;margin-bottom:.4rem;font-size:.85rem;line-height:1.6}
 .birikim-badge{display:inline-block;background:rgba(62,207,142,.15);color:var(--green);border:1px solid rgba(62,207,142,.3);border-radius:20px;padding:2px 10px;font-size:.72rem;font-weight:700}
 /* Sohbet */
-.sohbet-btn{position:fixed;bottom:calc(var(--mob-nav-h) + 1rem);right:1rem;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#000;border:none;font-size:1.4rem;cursor:pointer;z-index:150;box-shadow:0 4px 16px rgba(232,197,71,.4);display:flex;align-items:center;justify-content:center}
+.sohbet-btn{position:fixed;bottom:calc(var(--mob-nav-h) + 1rem);right:1rem;width:52px;height:52px;border-radius:50%;background:var(--gold);color:#000;border:none;font-size:1.4rem;cursor:pointer;z-index:150;box-shadow:0 4px 16px rgba(232,197,71,.4);display:flex;align-items:center;justify-content:center}
 .sohbet-panel{position:fixed;bottom:calc(var(--mob-nav-h) + 4.5rem);right:1rem;width:min(360px,calc(100vw - 2rem));background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);z-index:150;display:flex;flex-direction:column;max-height:480px;overflow:hidden}
 .sohbet-panel.hidden{display:none}
 .sohbet-header{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1rem;border-bottom:1px solid var(--border);background:var(--bg3)}
-.sohbet-header h4{font-family:var(--font-display);font-size:.95rem;font-weight:700}
+.sohbet-header h4{font-family:var(--font);font-size:.95rem;font-weight:700}
 .sohbet-kapat{background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer}
 .sohbet-mesajlar{flex:1;overflow-y:auto;padding:.75rem;display:flex;flex-direction:column;gap:.5rem;min-height:150px}
 .sohbet-msg{padding:.6rem .85rem;border-radius:10px;font-size:.82rem;line-height:1.6;max-width:90%}
 .sohbet-msg.ai{background:var(--bg3);border:1px solid var(--border);align-self:flex-start}
-.sohbet-msg.user{background:var(--accent);color:#000;align-self:flex-end;font-weight:500}
+.sohbet-msg.user{background:var(--gold);color:#000;align-self:flex-end;font-weight:500}
 .sohbet-input-row{display:flex;gap:.5rem;padding:.6rem .75rem;border-top:1px solid var(--border)}
-.sohbet-input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:.5rem .75rem;font-size:.85rem;font-family:var(--font-body)}
-.sohbet-gonder{background:var(--accent);color:#000;border:none;border-radius:8px;padding:.5rem .85rem;font-weight:700;font-size:.85rem;cursor:pointer}
+.sohbet-input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:.5rem .75rem;font-size:.85rem;font-family:var(--font)}
+.sohbet-gonder{background:var(--gold);color:#000;border:none;border-radius:8px;padding:.5rem .85rem;font-weight:700;font-size:.85rem;cursor:pointer}
 /* Harcama freni */
 .fren-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;padding:1.5rem;backdrop-filter:blur(6px)}
-.fren-box{background:var(--bg2);border:2px solid var(--accent);border-radius:var(--radius);padding:1.75rem;max-width:400px;width:100%;text-align:center}
-.fren-timer{font-family:var(--font-display);font-size:3rem;font-weight:800;color:var(--accent);margin:1rem 0}
+.fren-box{background:var(--bg2);border:2px solid var(--gold);border-radius:var(--radius);padding:1.75rem;max-width:400px;width:100%;text-align:center}
+.fren-timer{font-family:var(--font);font-size:3rem;font-weight:800;color:var(--gold);margin:1rem 0}
 /* Yaşam */
 .checkin-soru{background:var(--bg3);border-radius:var(--radius-sm);padding:1rem;margin-bottom:.75rem;font-size:.9rem}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
@@ -516,23 +931,11 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
   <!-- MOBILE NAV -->
   <nav class="mobile-nav">
     <div class="mobile-nav-inner">
-      <button class="mnav-item active" data-page="dashboard">◈<span>Ana</span></button>
+      <button class="mnav-item active" data-page="dashboard">⌂<span>Ana</span></button>
       <button class="mnav-item" data-page="transactions">⇄<span>İşlem</span></button>
-      <button class="mnav-item" data-page="islerim">🏗️<span>İşlerim</span></button>
-      <button class="mnav-item" data-page="kasa">🏪<span>Kasa</span></button>
-      <button class="mnav-item" data-page="debt">⬡<span>Borç</span></button>
-      <button class="mnav-item" data-page="budget">◎<span>Bütçe</span></button>
-      <button class="mnav-item" data-page="discipline">◉<span>Disiplin</span></button>
-      <button class="mnav-item" data-page="habits">🔥<span>Alışkanlık</span></button>
-      <button class="mnav-item" data-page="investment">△<span>Yatırım</span></button>
-      <button class="mnav-item" data-page="goals">🎯<span>Hedefler</span></button>
-      <button class="mnav-item" data-page="alerts">🔔<span>Hatırlatıcı</span></button>
-      <button class="mnav-item" data-page="reports">▦<span>Rapor</span></button>
-      <button class="mnav-item" data-page="academy">📚<span>Akademi</span></button>
-      <button class="mnav-item" data-page="finans-okulu">📖<span>F.Okul</span></button>
-      <button class="mnav-item" data-page="isletme">🏭<span>İşletme</span></button>
-      <button class="mnav-item" data-page="yasam">🌱<span>Yaşam</span></button>
-      <button class="mnav-item" onclick="openSettings()">⚙<span>Ayarlar</span></button>
+      <button class="mnav-plus" onclick="openTxModal()">+</button>
+      <button class="mnav-item" data-page="islerim">🏗<span>İşlerim</span></button>
+      <button class="mnav-item" data-page="menu">⋯<span>Menü</span></button>
     </div>
   </nav>
 
@@ -824,10 +1227,10 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
       </div>
       <div class="section-block">
         <p class="section-desc">Finansal okuryazarlığını adım adım geliştir. Her ders pratik, senin durumuna özel.</p>
-        <p id="academyProgress" style="color:var(--accent);font-weight:700;font-size:0.9rem"></p>
+        <p id="academyProgress" style="color:var(--gold);font-weight:700;font-size:0.9rem"></p>
       </div>
       <div style="background:var(--bg3);border-radius:4px;overflow:hidden;margin-bottom:1rem;height:8px">
-        <div id="academyProgressBar" style="height:100%;background:var(--accent);transition:width .5s;width:0%"></div>
+        <div id="academyProgressBar" style="height:100%;background:var(--gold);transition:width .5s;width:0%"></div>
       </div>
       <div id="academyList" class="academy-list"></div>
       <div class="section-block" style="margin-top:1rem">
@@ -862,7 +1265,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
       <div class="page-header">
         <div><p class="page-sup">Günlük Kasa</p><h2 class="page-title">Kasa & Stok</h2></div>
         <div style="display:flex;gap:.5rem">
-          <button class="add-btn" style="background:var(--bg3);color:var(--accent);border:1px solid var(--accent)" id="kasaAcilisBtn">Açılış Gir</button>
+          <button class="add-btn" style="background:var(--bg3);color:var(--gold);border:1px solid var(--gold)" id="kasaAcilisBtn">Açılış Gir</button>
           <button class="add-btn" id="addStokBtn">+ Stok</button>
         </div>
       </div>
@@ -1034,7 +1437,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
       <div id="fo-temel" class="yeni-panel active">
         <div class="section-block"><p class="section-title">🏗️ Finansal Özgürlük Piramidi</p>
           <div style="display:flex;flex-direction:column;gap:.5rem">
-            <div style="background:rgba(232,197,71,.15);border:1px solid var(--accent);border-radius:8px;padding:.7rem;text-align:center;font-weight:700">5️⃣ Servet & Pasif Gelir</div>
+            <div style="background:rgba(232,197,71,.15);border:1px solid var(--gold);border-radius:8px;padding:.7rem;text-align:center;font-weight:700">5️⃣ Servet & Pasif Gelir</div>
             <div style="background:rgba(62,207,142,.1);border:1px solid var(--green);border-radius:8px;padding:.7rem;text-align:center">4️⃣ Yatırım (Altın, Borsa, Kripto)</div>
             <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.7rem;text-align:center">3️⃣ Acil Fonu Tamamla</div>
             <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.7rem;text-align:center">2️⃣ Borçları Bitir</div>
@@ -1094,7 +1497,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
         <div class="section-block"><p class="section-title">🎯 Uşak'ta Kimler Müşteri?</p>
           <div style="display:flex;flex-direction:column;gap:.5rem">
             <div style="background:var(--bg3);border-radius:8px;padding:.85rem;border-left:3px solid var(--red)"><strong>🏗️ Müteahhitler — ÖNCELİKLİ</strong><p style="font-size:.78rem;color:var(--text2);margin-top:.25rem">Uşak'ta aktif şantiyeleri tespit et. 1 proje = 10–50+ ürün.</p></div>
-            <div style="background:var(--bg3);border-radius:8px;padding:.85rem;border-left:3px solid var(--accent)"><strong>🎨 Mimarlar</strong><p style="font-size:.78rem;color:var(--text2);margin-top:.25rem">Uşak'taki mimarlık bürolarını ziyaret et. Numune bırak.</p></div>
+            <div style="background:var(--bg3);border-radius:8px;padding:.85rem;border-left:3px solid var(--gold)"><strong>🎨 Mimarlar</strong><p style="font-size:.78rem;color:var(--text2);margin-top:.25rem">Uşak'taki mimarlık bürolarını ziyaret et. Numune bırak.</p></div>
             <div style="background:var(--bg3);border-radius:8px;padding:.85rem;border-left:3px solid var(--green)"><strong>🏠 Bireysel Ev Sahipleri</strong><p style="font-size:.78rem;color:var(--text2);margin-top:.25rem">Google Haritalar + Instagram. Referans sistemi kur.</p></div>
           </div>
         </div>
@@ -1135,6 +1538,84 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
             <button class="add-btn" onclick="okrEkle()">+ Ekle</button>
           </div>
           <div id="okr-liste"><p class="empty-state" id="okr-bos">Henüz hedef eklenmedi.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MENÜ SAYFASI -->
+    <section id="page-menu" class="page">
+      <div class="page-header">
+        <div><p class="page-sup">Tüm Özellikler</p><h2 class="page-title">Menü</h2></div>
+      </div>
+      <!-- Ödeme Takvimi -->
+      <div class="section-block" style="border-color:rgba(201,165,53,.25);background:var(--gold-dim)">
+        <h3 class="section-title">📅 Yaklaşan Ödemeler & Tahsilatlar</h3>
+        <div id="menuOdemeTakvim"><p class="empty-state">Borç veya proje ekleyince burada görünür.</p></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+        <div onclick="navigate('debt')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">⬡</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Borç Takibi</div>
+        </div>
+        <div onclick="navigate('budget')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">◎</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Bütçe</div>
+        </div>
+        <div onclick="navigate('investment')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">△</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Yatırım</div>
+        </div>
+        <div onclick="navigate('goals')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">🎯</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Hedefler</div>
+        </div>
+        <div onclick="navigate('discipline')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">◉</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Disiplin</div>
+        </div>
+        <div onclick="navigate('habits')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">🔥</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Alışkanlıklar</div>
+        </div>
+        <div onclick="navigate('kasa')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">🏪</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Kasa & Stok</div>
+        </div>
+        <div onclick="navigate('alerts')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">🔔</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Hatırlatıcılar</div>
+        </div>
+        <div onclick="navigate('cashflow')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">〜</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Nakit Akışı</div>
+        </div>
+        <div onclick="navigate('reports')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">▦</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Raporlar</div>
+        </div>
+        <div onclick="navigate('academy')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">📚</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Akademi</div>
+        </div>
+        <div onclick="navigate('finans-okulu')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">📖</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Finans Okulu</div>
+        </div>
+        <div onclick="navigate('isletme')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">🏭</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">İşletme Koçu</div>
+        </div>
+        <div onclick="navigate('yasam')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">🌱</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Yaşam</div>
+        </div>
+        <div onclick="navigate('badges')" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">🏅</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Rozetler</div>
+        </div>
+        <div onclick="openSettings()" style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">⚙</div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text)">Ayarlar</div>
         </div>
       </div>
     </section>
@@ -1206,7 +1687,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
       <div id="yasam-pomodoro" class="yeni-panel">
         <div class="section-block" style="text-align:center">
           <p class="section-title" style="text-align:left">⏱️ Pomodoro</p>
-          <div id="pomodoroZaman" style="font-family:var(--font-display);font-size:4rem;font-weight:800;color:var(--accent);margin-bottom:.4rem">25:00</div>
+          <div id="pomodoroZaman" style="font-family:var(--font);font-size:4rem;font-weight:800;color:var(--gold);margin-bottom:.4rem">25:00</div>
           <div id="pomodoroFaz" style="font-size:.85rem;color:var(--text2);margin-bottom:1rem">🎯 Çalışma</div>
           <div style="display:flex;gap:.75rem;justify-content:center;margin-bottom:.75rem">
             <button class="add-btn" onclick="pomBaslat()">▶ Başla</button>
@@ -1319,6 +1800,10 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
       <input type="number" id="debtAmount" placeholder="Toplam tutar (₺)" class="modal-input">
       <input type="number" id="debtRate" placeholder="Faiz oranı % (yoksa 0)" class="modal-input">
       <input type="number" id="debtMinPayment" placeholder="Min. aylık ödeme (₺)" class="modal-input">
+      <label class="modal-label">Aylık ödeme günü</label>
+      <input type="number" id="debtPayDay" placeholder="Her ayın kaçında? (örn: 15)" class="modal-input" min="1" max="31">
+      <label class="modal-label">Son ödeme tarihi (isteğe bağlı)</label>
+      <input type="date" id="debtDueDate" class="modal-input">
       <div class="modal-footer"><button class="cancel-btn" data-modal="debtModal">İptal</button><button class="confirm-btn" id="saveDebt">Kaydet</button></div>
     </div>
   </div>
@@ -1414,7 +1899,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
       <label class="modal-label">İsmin</label>
       <input type="text" id="settingName" placeholder="Adın" class="modal-input">
       <div style="background:rgba(232,197,71,.06);border:1px solid rgba(232,197,71,.25);border-radius:10px;padding:.75rem 1rem;margin-bottom:.75rem">
-        <p style="font-size:.78rem;color:var(--accent);font-weight:700;margin-bottom:.5rem">🏪 Esnaf Modu — Değişken Gelir</p>
+        <p style="font-size:.78rem;color:var(--gold);font-weight:700;margin-bottom:.5rem">🏪 Esnaf Modu — Değişken Gelir</p>
         <label class="modal-label" style="margin-top:0">Ortalama Aylık Gelir (₺) <span style="color:var(--text3);font-size:.72rem">— son 3 ayın ortalaması</span></label>
         <input type="number" id="settingAvgIncome" class="modal-input" placeholder="Örn: 40000">
         <label class="modal-label">En Düşük Ay Gelirim (₺) <span style="color:var(--text3);font-size:.72rem">— kötü ay tahmini</span></label>
@@ -1437,9 +1922,9 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
       <label class="modal-label">Diğer Varlıklar (araba, gayrimenkul vb.) (₺)</label>
       <input type="number" id="settingNetWorthAssets" class="modal-input">
       <div style="border-top:1px solid var(--border);margin-top:.75rem;padding-top:.75rem">
-        <label class="modal-label" style="color:var(--accent)">🤖 Gemini API Key (AI Koç için)</label>
+        <label class="modal-label" style="color:var(--gold)">🤖 Gemini API Key (AI Koç için)</label>
         <input type="password" id="settingApiKey" placeholder="AIza..." class="modal-input">
-        <small style="color:var(--text3);font-size:.75rem;display:block;margin-top:.3rem;line-height:1.6">Günde 250 analiz ücretsiz! → <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent)">aistudio.google.com</a></small>
+        <small style="color:var(--text3);font-size:.75rem;display:block;margin-top:.3rem;line-height:1.6">Günde 250 analiz ücretsiz! → <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--gold)">aistudio.google.com</a></small>
       </div>
       <div class="modal-footer"><button class="cancel-btn" data-modal="settingsModal">İptal</button><button class="confirm-btn" id="saveSettings">Kaydet</button></div>
     </div>
@@ -1640,6 +2125,7 @@ function renderPage(page) {
     badges: renderBadges,
     coach: renderCoach,
     alerts: function(){ renderAlerts(); renderVergiTakvim(); },
+    menu: function(){ renderMenuTakvim(); },
     islerim: renderIslerim,
     'finans-okulu': function(){ renderFoDetoks(); },
     'isletme': function(){ renderMcListe(); renderOkrListe(); },
@@ -1822,7 +2308,7 @@ function renderBudgets() {
     const avgIncome = state.settings.avgIncome || 0;
     let incomeNote = '';
     if(avgIncome > 0 && totalIncome === 0) {
-      incomeNote = `<div style="background:rgba(232,197,71,.06);border:1px solid rgba(232,197,71,.25);border-radius:8px;padding:.6rem .85rem;font-size:.78rem;color:var(--accent);margin-top:.5rem">⚠️ Henüz bu ay gelir girişi yapılmadı. Ortalaman: <strong>${fmt(avgIncome)}</strong>/ay. Gelir ekleyince bütçen otomatik hesaplanır.</div>`;
+      incomeNote = `<div style="background:rgba(232,197,71,.06);border:1px solid rgba(232,197,71,.25);border-radius:8px;padding:.6rem .85rem;font-size:.78rem;color:var(--gold);margin-top:.5rem">⚠️ Henüz bu ay gelir girişi yapılmadı. Ortalaman: <strong>${fmt(avgIncome)}</strong>/ay. Gelir ekleyince bütçen otomatik hesaplanır.</div>`;
     } else if(avgIncome > 0 && totalIncome < avgIncome * 0.7) {
       incomeNote = `<div style="background:rgba(240,77,77,.06);border:1px solid rgba(240,77,77,.3);border-radius:8px;padding:.6rem .85rem;font-size:.78rem;color:var(--red);margin-top:.5rem">⚠️ Düşük ay: ${fmt(totalIncome)} (ortalaman ${fmt(avgIncome)}). Kış ayı gibi düşün — sadece zorunlu giderler!</div>`;
     }
@@ -1893,7 +2379,7 @@ function renderDebt() {
           <div style="display:flex;gap:0.5rem;align-items:center">
             ${d.interestRate>0?`<div class="debt-rate">%${d.interestRate}</div>`:''}
             <button class="del-btn" onclick="makeDebtPayment('${d.id}')">💸 Öde</button>
-            <button class="del-btn" style="color:var(--accent)" onclick="editDebt('${d.id}')">✏️</button>
+            <button class="del-btn" style="color:var(--gold)" onclick="editDebt('${d.id}')">✏️</button>
             <button class="del-btn" onclick="deleteDebt('${d.id}')">✕</button>
           </div>
         </div>
@@ -2467,7 +2953,7 @@ function openLesson(id) {
   // Quiz bölümü
   const quizEl = document.getElementById('lessonQuiz');
   if(lesson.quiz && lesson.quiz.length > 0) {
-    quizEl.innerHTML = `<div class="quiz-section"><h4 style="margin-bottom:.75rem;color:var(--accent)">📝 Anlama Testi</h4>` +
+    quizEl.innerHTML = `<div class="quiz-section"><h4 style="margin-bottom:.75rem;color:var(--gold)">📝 Anlama Testi</h4>` +
       lesson.quiz.map((q,qi) => `
         <div class="quiz-q" id="quiz_${qi}">
           <p style="font-weight:600;margin-bottom:.5rem">${qi+1}. ${q.q}</p>
@@ -2781,6 +3267,8 @@ function saveDebt() {
       remaining: amount,
       interestRate: rate,
       minPayment: minPay,
+      payDay: parseInt(document.getElementById('debtPayDay')?.value)||0,
+      dueDate: document.getElementById('debtDueDate')?.value||'',
       startDate: today(),
     });
     toast('✓ Borç eklendi', 'success');
@@ -3296,18 +3784,18 @@ function parseJSON(raw) {
 }
 
 function apiKeyUyari(box) {
-  box.innerHTML = `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.85rem;font-size:.82rem;line-height:1.6">⚙️ AI koç için Gemini API key gerekli.<br><button onclick="openSettings()" style="color:var(--accent);background:none;border:none;cursor:pointer;font-size:.82rem">⚙ Ayarlar → API Key Gir →</button></div>`;
+  box.innerHTML = `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.85rem;font-size:.82rem;line-height:1.6">⚙️ AI koç için Gemini API key gerekli.<br><button onclick="openSettings()" style="color:var(--gold);background:none;border:none;cursor:pointer;font-size:.82rem">⚙ Ayarlar → API Key Gir →</button></div>`;
 }
 
 function yukleniyor(box, renk) {
-  box.innerHTML = `<div style="display:flex;align-items:center;gap:.75rem;padding:1rem;color:var(--text2)"><div style="width:16px;height:16px;border:2px solid ${renk||'var(--accent)'};border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0"></div><span style="font-size:.85rem">Analiz ediliyor…</span></div>`;
+  box.innerHTML = `<div style="display:flex;align-items:center;gap:.75rem;padding:1rem;color:var(--text2)"><div style="width:16px;height:16px;border:2px solid ${renk||'var(--gold)'};border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0"></div><span style="font-size:.85rem">Analiz ediliyor…</span></div>`;
 }
 
 // ---- FİNANS KOÇU ----
 async function finansKocAnaliz() {
   const box = document.getElementById('finans-koc-box'); if(!box) return;
   if(!localStorage.getItem('gemini_api_key')) { apiKeyUyari(box); return; }
-  yukleniyor(box, 'var(--accent)');
+  yukleniyor(box, 'var(--gold)');
   const t = thisMonthTxs();
   const income = sumByType(t,'income'), expense = sumByType(t,'expense'), gambling = sumByType(t,'gambling');
   const net = income - expense - gambling;
@@ -3326,12 +3814,12 @@ SADECE JSON yaz: {"ozet":"2 cümle dürüst değerlendirme","bugun":"YAP: bugün
   try {
     const raw = await geminiSor(prompt, 900);
     const p = parseJSON(raw);
-    const rc = ['var(--red)','var(--accent)','#6c8fff'];
+    const rc = ['var(--red)','var(--gold)','#6c8fff'];
     box.innerHTML = `
-      <div style="background:rgba(232,197,71,.08);border:1px solid rgba(232,197,71,.3);border-radius:10px;padding:.85rem;margin-bottom:.6rem;font-size:.85rem;line-height:1.7"><strong style="color:var(--accent)">🗺️ ${basamakAdi}</strong><br><span style="color:var(--text2)">${p.ozet||''}</span></div>
+      <div style="background:rgba(232,197,71,.08);border:1px solid rgba(232,197,71,.3);border-radius:10px;padding:.85rem;margin-bottom:.6rem;font-size:.85rem;line-height:1.7"><strong style="color:var(--gold)">🗺️ ${basamakAdi}</strong><br><span style="color:var(--text2)">${p.ozet||''}</span></div>
       <div style="background:rgba(62,207,142,.08);border:1px solid rgba(62,207,142,.3);border-radius:10px;padding:.85rem;margin-bottom:.6rem;font-size:.85rem"><strong style="color:var(--green)">⚡ BUGÜN YAP</strong><br><span style="font-weight:600">${p.bugun||''}</span></div>
       <div style="margin-bottom:.6rem">${(p.hafta||[]).map((h,i)=>`<div style="background:var(--bg3);border:1px solid var(--border);border-left:3px solid ${rc[i]};border-radius:8px;padding:.75rem;margin-bottom:.35rem;font-size:.85rem;font-weight:600">${h}</div>`).join('')}</div>
-      <div style="background:var(--bg3);border:2px solid var(--accent);border-radius:10px;padding:.85rem;margin-bottom:.6rem;font-size:.85rem"><strong style="color:var(--accent)">🎯 Bu Ay: </strong>${p.ay_hedef||''}</div>
+      <div style="background:var(--bg3);border:2px solid var(--gold);border-radius:10px;padding:.85rem;margin-bottom:.6rem;font-size:.85rem"><strong style="color:var(--gold)">🎯 Bu Ay: </strong>${p.ay_hedef||''}</div>
       ${p.kumar?`<div style="background:${gambling>0?'var(--red-dim)':'rgba(62,207,142,.06)'};border:1px solid ${gambling>0?'rgba(240,77,77,.3)':'rgba(62,207,142,.25)'};border-radius:10px;padding:.85rem;margin-bottom:.6rem;font-size:.85rem;line-height:1.7"><strong style="color:${gambling>0?'var(--red)':'var(--green)'}">${gambling>0?'🎰 Kumar':'✅ Disiplin'}</strong><br><span style="color:var(--text2)">${p.kumar}</span></div>`:''}
       <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.85rem;margin-bottom:.6rem;font-size:.85rem;line-height:1.7"><strong style="color:#6c8fff">📚 Bu Hafta Öğren: </strong><span style="color:var(--text2)">${p.ders||''}</span></div>
       <div style="background:rgba(62,207,142,.06);border:1px solid rgba(62,207,142,.2);border-radius:10px;padding:.85rem;font-size:.85rem;font-style:italic;color:var(--text2)">💬 ${p.motivasyon||''}</div>
@@ -3359,17 +3847,17 @@ SADECE JSON yaz: {"ozet":"işletme durumu 2 cümle","musteri_portfoyu":[{"tip":"
   try {
     const raw = await geminiSor(prompt, 1200);
     const p = parseJSON(raw);
-    const orc={'YÜK':'var(--red)','ORTA':'var(--accent)','DÜŞÜK':'#6c8fff'};
+    const orc={'YÜK':'var(--red)','ORTA':'var(--gold)','DÜŞÜK':'#6c8fff'};
     box.innerHTML = `
       <div style="background:rgba(62,207,142,.08);border:1px solid rgba(62,207,142,.3);border-radius:10px;padding:.85rem;margin-bottom:.6rem;font-size:.85rem;line-height:1.7;border-left:4px solid var(--green)"><strong style="color:var(--green)">🏭 Durum</strong><br><span style="color:var(--text2)">${p.ozet||''}</span></div>
       <div style="margin-bottom:.6rem"><p style="font-size:.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;margin-bottom:.4rem">👥 Uşak'ta Müşteri Portföyü</p>
-        ${(p.musteri_portfoyu||[]).map(k=>`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin-bottom:.4rem"><strong style="font-size:.85rem">${k.tip}</strong><div style="font-size:.75rem;color:var(--accent);margin:.2rem 0">📍 ${k.nerede}</div><div style="font-size:.82rem;font-weight:600">${k.komut}</div></div>`).join('')}
+        ${(p.musteri_portfoyu||[]).map(k=>`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin-bottom:.4rem"><strong style="font-size:.85rem">${k.tip}</strong><div style="font-size:.75rem;color:var(--gold);margin:.2rem 0">📍 ${k.nerede}</div><div style="font-size:.82rem;font-weight:600">${k.komut}</div></div>`).join('')}
       </div>
       <div style="margin-bottom:.6rem"><p style="font-size:.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;margin-bottom:.4rem">📅 Bu Hafta</p>
-        ${(p.hafta||[]).map(a=>`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.7rem;margin-bottom:.3rem;display:flex;gap:.6rem"><span style="font-size:.72rem;font-weight:700;color:var(--accent);min-width:60px">${a.gun}</span><span style="font-size:.82rem;font-weight:500">${a.gorev}</span></div>`).join('')}
+        ${(p.hafta||[]).map(a=>`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.7rem;margin-bottom:.3rem;display:flex;gap:.6rem"><span style="font-size:.72rem;font-weight:700;color:var(--gold);min-width:60px">${a.gun}</span><span style="font-size:.82rem;font-weight:500">${a.gorev}</span></div>`).join('')}
       </div>
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.85rem;margin-bottom:.6rem;font-size:.85rem"><strong style="color:var(--accent)">🗺️ Yol Haritası</strong><div style="margin-top:.4rem;display:flex;flex-direction:column;gap:.3rem"><div style="display:flex;gap:.4rem"><span style="color:var(--red);font-weight:700;min-width:40px;font-size:.72rem">1 AY</span><span style="font-size:.8rem;color:var(--text2)">${(p.yol||{})['1ay']||''}</span></div><div style="display:flex;gap:.4rem"><span style="color:var(--accent);font-weight:700;min-width:40px;font-size:.72rem">3 AY</span><span style="font-size:.8rem;color:var(--text2)">${(p.yol||{})['3ay']||''}</span></div><div style="display:flex;gap:.4rem"><span style="color:var(--green);font-weight:700;min-width:40px;font-size:.72rem">6 AY</span><span style="font-size:.8rem;color:var(--text2)">${(p.yol||{})['6ay']||''}</span></div></div></div>
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin-bottom:.5rem;font-size:.85rem;line-height:1.6"><strong style="color:var(--accent)">💰 Fiyat: </strong><span style="color:var(--text2)">${p.fiyat||''}</span></div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.85rem;margin-bottom:.6rem;font-size:.85rem"><strong style="color:var(--gold)">🗺️ Yol Haritası</strong><div style="margin-top:.4rem;display:flex;flex-direction:column;gap:.3rem"><div style="display:flex;gap:.4rem"><span style="color:var(--red);font-weight:700;min-width:40px;font-size:.72rem">1 AY</span><span style="font-size:.8rem;color:var(--text2)">${(p.yol||{})['1ay']||''}</span></div><div style="display:flex;gap:.4rem"><span style="color:var(--gold);font-weight:700;min-width:40px;font-size:.72rem">3 AY</span><span style="font-size:.8rem;color:var(--text2)">${(p.yol||{})['3ay']||''}</span></div><div style="display:flex;gap:.4rem"><span style="color:var(--green);font-weight:700;min-width:40px;font-size:.72rem">6 AY</span><span style="font-size:.8rem;color:var(--text2)">${(p.yol||{})['6ay']||''}</span></div></div></div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin-bottom:.5rem;font-size:.85rem;line-height:1.6"><strong style="color:var(--gold)">💰 Fiyat: </strong><span style="color:var(--text2)">${p.fiyat||''}</span></div>
       <div style="background:rgba(108,143,255,.06);border:1px solid rgba(108,143,255,.2);border-radius:8px;padding:.8rem;margin-bottom:.5rem;font-size:.85rem;line-height:1.6"><strong style="color:#6c8fff">📱 Dijital: </strong><span style="color:var(--text2)">${p.dijital||''}</span></div>
       <div style="background:rgba(62,207,142,.06);border:1px solid rgba(62,207,142,.2);border-radius:8px;padding:.8rem;font-size:.85rem;font-style:italic;color:var(--text2)">💬 ${p.motivasyon||''}</div>
       <div style="font-size:.65rem;color:var(--text3);text-align:center;margin-top:.4rem">${new Date().toLocaleString('tr-TR')}</div>`;
@@ -3395,10 +3883,10 @@ SADECE JSON: {"ozet":"borç durumu 2 cümle","strateji":"ÇIĞ veya KARTOPU — 
     const p = parseJSON(raw);
     box.innerHTML = `
       <div style="background:var(--red-dim);border:1px solid rgba(240,77,77,.3);border-radius:10px;padding:.85rem;margin-bottom:.6rem;font-size:.85rem;line-height:1.7"><strong style="color:var(--red)">💳 Durum</strong><br><span style="color:var(--text2)">${p.ozet||''}</span></div>
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.85rem;margin-bottom:.6rem;font-size:.85rem;line-height:1.7"><strong style="color:var(--accent)">⚡ Strateji: </strong>${p.strateji||''}</div>
-      <div style="margin-bottom:.6rem">${(p.plan||[]).map((b,i)=>`<div style="background:var(--bg3);border:1px solid var(--border);border-left:3px solid ${['var(--red)','var(--accent)','#6c8fff'][i]||'var(--border)'};border-radius:8px;padding:.8rem;margin-bottom:.35rem"><div style="font-weight:700;font-size:.85rem;margin-bottom:.25rem">${b.borc}</div><div style="font-size:.82rem;font-weight:600">${b.komut}</div><div style="font-size:.75rem;color:var(--text2);margin-top:.2rem">⏱ ${b.sure} · 💸 ${b.faiz}</div></div>`).join('')}</div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.85rem;margin-bottom:.6rem;font-size:.85rem;line-height:1.7"><strong style="color:var(--gold)">⚡ Strateji: </strong>${p.strateji||''}</div>
+      <div style="margin-bottom:.6rem">${(p.plan||[]).map((b,i)=>`<div style="background:var(--bg3);border:1px solid var(--border);border-left:3px solid ${['var(--red)','var(--gold)','#6c8fff'][i]||'var(--border)'};border-radius:8px;padding:.8rem;margin-bottom:.35rem"><div style="font-weight:700;font-size:.85rem;margin-bottom:.25rem">${b.borc}</div><div style="font-size:.82rem;font-weight:600">${b.komut}</div><div style="font-size:.75rem;color:var(--text2);margin-top:.2rem">⏱ ${b.sure} · 💸 ${b.faiz}</div></div>`).join('')}</div>
       ${p.kumar?`<div style="background:${gambling>0?'var(--red-dim)':'rgba(62,207,142,.06)'};border:1px solid ${gambling>0?'rgba(240,77,77,.3)':'rgba(62,207,142,.25)'};border-radius:8px;padding:.85rem;margin-bottom:.6rem;font-size:.85rem;line-height:1.7"><strong style="color:${gambling>0?'var(--red)':'var(--green)'}">🎰 ${gambling>0?'Kumar → Borç':'Kumar Durumu'}</strong><br><span style="color:var(--text2)">${p.kumar}</span></div>`:''}
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin-bottom:.5rem;font-size:.85rem;line-height:1.6"><strong style="color:var(--accent)">🏦 Yapılandırma: </strong><span style="color:var(--text2)">${p.yapi||''}</span></div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin-bottom:.5rem;font-size:.85rem;line-height:1.6"><strong style="color:var(--gold)">🏦 Yapılandırma: </strong><span style="color:var(--text2)">${p.yapi||''}</span></div>
       <div style="background:rgba(240,77,77,.08);border:2px solid rgba(240,77,77,.4);border-radius:10px;padding:.85rem;margin-bottom:.5rem;font-size:.85rem"><strong style="color:var(--red)">⚡ BUGÜN YAP: </strong><span style="font-weight:600">${p.acil||''}</span></div>
       <div style="background:rgba(62,207,142,.06);border:1px solid rgba(62,207,142,.2);border-radius:8px;padding:.8rem;font-size:.85rem;font-style:italic;color:var(--text2)">💬 ${p.motivasyon||''}</div>`;
   } catch(e) { box.innerHTML=`<div style="color:var(--red);font-size:.85rem;padding:1rem">⚠️ ${e.message}</div>`; }
@@ -3480,7 +3968,7 @@ SADECE JSON: {"durum":"hedeflere göre 2 cümle","analiz":"sapma ve etki","strat
     const asildi = h.alkol && topAlkol > h.alkol;
     box.innerHTML=`
       <div style="background:${asildi?'var(--red-dim)':'rgba(62,207,142,.06)'};border:1px solid ${asildi?'rgba(240,77,77,.3)':'rgba(62,207,142,.25)'};border-radius:10px;padding:.85rem;margin-bottom:.5rem;font-size:.85rem;line-height:1.7"><strong style="color:${asildi?'var(--red)':'var(--green)'}">${asildi?'⚠️ Hedef Aşıldı':'✅ Durum'}</strong><br><span style="color:var(--text2)">${p.durum||''}</span></div>
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin-bottom:.5rem;font-size:.85rem;line-height:1.6"><strong style="color:var(--accent)">📊 Analiz: </strong><span style="color:var(--text2)">${p.analiz||''}</span></div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin-bottom:.5rem;font-size:.85rem;line-height:1.6"><strong style="color:var(--gold)">📊 Analiz: </strong><span style="color:var(--text2)">${p.analiz||''}</span></div>
       <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin-bottom:.5rem;font-size:.85rem;line-height:1.6"><strong style="color:var(--green)">⚡ Strateji: </strong><span style="font-weight:600">${p.strateji||''}</span></div>
       <div style="background:rgba(240,77,77,.06);border:1px solid rgba(240,77,77,.2);border-radius:8px;padding:.8rem;margin-bottom:.5rem;font-size:.85rem;line-height:1.6"><strong style="color:var(--red)">💸 Mali Etki: </strong><span style="color:var(--text2)">${p.mali||''}</span></div>
       <div style="background:rgba(62,207,142,.06);border:1px solid rgba(62,207,142,.2);border-radius:8px;padding:.8rem;font-size:.85rem;font-style:italic;color:var(--text2)">💬 ${p.motivasyon||''}</div>`;
@@ -3545,7 +4033,7 @@ function renderBorcOldur() {
 function borcOldurSecModal() {
   if(state.debts.length===0){toast('⚠️ Önce borç ekle');return;}
   const el=document.getElementById('borcOdakList');
-  el.innerHTML=state.debts.map(d=>`<button onclick="borcOdakSec('${d.id}')" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.85rem;text-align:left;color:var(--text);cursor:pointer;margin-bottom:.3rem;font-family:var(--font-body)"><div style="font-weight:700">${d.name}</div><div style="font-size:.75rem;color:var(--text2)">₺${d.remaining.toLocaleString('tr-TR')} · %${d.interestRate||0} faiz</div></button>`).join('');
+  el.innerHTML=state.debts.map(d=>`<button onclick="borcOdakSec('${d.id}')" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.85rem;text-align:left;color:var(--text);cursor:pointer;margin-bottom:.3rem;font-family:var(--font)"><div style="font-weight:700">${d.name}</div><div style="font-size:.75rem;color:var(--text2)">₺${d.remaining.toLocaleString('tr-TR')} · %${d.interestRate||0} faiz</div></button>`).join('');
   openModal('borcOdakModal');
 }
 function borcOdakSec(id){localStorage.setItem('borc_odak',id);closeModal('borcOdakModal');renderBorcOldur();toast('🔥 Odak borç seçildi!','success');}
@@ -3556,12 +4044,12 @@ const FO_DETOKS=[{e:'📵',t:'1. Alışveriş uygulamalarını sil'},{e:'💳',t
 function renderFoDetoks(){const el=document.getElementById('fo-detoks');if(!el)return;el.innerHTML=FO_DETOKS.map((d,i)=>`<div class="ic-check-item ${_foDetoksState[i]?'checked':''}" onclick="foDetoksToggle(${i})"><span class="ic-box">${_foDetoksState[i]?'☑':'☐'}</span><span>${d.e} ${d.t}</span></div>`).join('');}
 function foDetoksToggle(i){_foDetoksState[i]=!_foDetoksState[i];localStorage.setItem('fo-detoks',JSON.stringify(_foDetoksState));renderFoDetoks();}
 function foGoster(panel,btn){document.querySelectorAll('#page-finans-okulu .yeni-tab').forEach(b=>b.classList.remove('active'));document.querySelectorAll('#page-finans-okulu .yeni-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');const el=document.getElementById('fo-'+panel);if(el)el.classList.add('active');}
-function foHesapla(){const g=parseFloat(document.getElementById('fo-gelir-inp')?.value);const r=document.getElementById('fo-butce-sonuc');if(!r)return;if(!g||g<=0){r.style.display='block';r.innerHTML='⚠️ Gelir gir.';return;}r.style.display='block';r.innerHTML=`<div style="display:flex;flex-direction:column;gap:.4rem"><div style="display:flex;justify-content:space-between"><span>🏠 İhtiyaçlar (%50)</span><strong>₺${Math.round(g*.5).toLocaleString('tr-TR')}</strong></div><div style="display:flex;justify-content:space-between"><span>🛍️ İstekler (%30)</span><strong style="color:var(--accent)">₺${Math.round(g*.3).toLocaleString('tr-TR')}</strong></div><div style="display:flex;justify-content:space-between"><span>💰 Tasarruf (%20)</span><strong style="color:var(--green)">₺${Math.round(g*.2).toLocaleString('tr-TR')}</strong></div></div>`;}
+function foHesapla(){const g=parseFloat(document.getElementById('fo-gelir-inp')?.value);const r=document.getElementById('fo-butce-sonuc');if(!r)return;if(!g||g<=0){r.style.display='block';r.innerHTML='⚠️ Gelir gir.';return;}r.style.display='block';r.innerHTML=`<div style="display:flex;flex-direction:column;gap:.4rem"><div style="display:flex;justify-content:space-between"><span>🏠 İhtiyaçlar (%50)</span><strong>₺${Math.round(g*.5).toLocaleString('tr-TR')}</strong></div><div style="display:flex;justify-content:space-between"><span>🛍️ İstekler (%30)</span><strong style="color:var(--gold)">₺${Math.round(g*.3).toLocaleString('tr-TR')}</strong></div><div style="display:flex;justify-content:space-between"><span>💰 Tasarruf (%20)</span><strong style="color:var(--green)">₺${Math.round(g*.2).toLocaleString('tr-TR')}</strong></div></div>`;}
 
 // ---- İŞLETME ----
 function isletmeGoster(panel,btn){document.querySelectorAll('#page-isletme .yeni-tab').forEach(b=>b.classList.remove('active'));document.querySelectorAll('#page-isletme .yeni-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');const el=document.getElementById('isletme-'+panel);if(el)el.classList.add('active');}
 function icCheck(el){el.classList.toggle('checked');el.querySelector('.ic-box').textContent=el.classList.contains('checked')?'☑':'☐';}
-function pmHesapla(){const mal=parseFloat(document.getElementById('pm-malzeme')?.value)||0,isc=parseFloat(document.getElementById('pm-iscilik')?.value)||0,sat=parseFloat(document.getElementById('pm-satis')?.value)||0;const r=document.getElementById('pm-sonuc');if(!r)return;if(sat<=0){r.style.display='block';r.innerHTML='⚠️ Satış fiyatı gir.';return;}const kar=sat-mal-isc,marj=Math.round(kar/sat*100),renk=marj>=30?'var(--green)':marj>=15?'var(--accent)':'var(--red)';r.style.display='block';r.innerHTML=`<div style="display:flex;flex-direction:column;gap:.4rem"><div style="display:flex;justify-content:space-between"><span>Maliyet</span><strong>₺${(mal+isc).toLocaleString('tr-TR')}</strong></div><div style="display:flex;justify-content:space-between"><span>Kâr</span><strong style="color:${renk}">₺${kar.toLocaleString('tr-TR')}</strong></div><div style="display:flex;justify-content:space-between"><span>Marj</span><strong style="color:${renk}">%${marj}</strong></div><div style="font-size:.75rem;color:var(--text2)">${marj>=30?'✅ Sağlıklı':marj>=15?'⚠️ Düşük':'🚨 Çok düşük!'}</div></div>`;}
+function pmHesapla(){const mal=parseFloat(document.getElementById('pm-malzeme')?.value)||0,isc=parseFloat(document.getElementById('pm-iscilik')?.value)||0,sat=parseFloat(document.getElementById('pm-satis')?.value)||0;const r=document.getElementById('pm-sonuc');if(!r)return;if(sat<=0){r.style.display='block';r.innerHTML='⚠️ Satış fiyatı gir.';return;}const kar=sat-mal-isc,marj=Math.round(kar/sat*100),renk=marj>=30?'var(--green)':marj>=15?'var(--gold)':'var(--red)';r.style.display='block';r.innerHTML=`<div style="display:flex;flex-direction:column;gap:.4rem"><div style="display:flex;justify-content:space-between"><span>Maliyet</span><strong>₺${(mal+isc).toLocaleString('tr-TR')}</strong></div><div style="display:flex;justify-content:space-between"><span>Kâr</span><strong style="color:${renk}">₺${kar.toLocaleString('tr-TR')}</strong></div><div style="display:flex;justify-content:space-between"><span>Marj</span><strong style="color:${renk}">%${marj}</strong></div><div style="font-size:.75rem;color:var(--text2)">${marj>=30?'✅ Sağlıklı':marj>=15?'⚠️ Düşük':'🚨 Çok düşük!'}</div></div>`;}
 const _mc=JSON.parse(localStorage.getItem('mc-musteriler')||'[]');
 function mcEkle(){const isim=document.getElementById('mc-isim')?.value.trim(),konu=document.getElementById('mc-konu')?.value.trim();if(!isim){toast('⚠️ Ad gir');return;}_mc.push({id:Date.now(),isim,konu,tarih:new Date().toLocaleDateString('tr-TR')});localStorage.setItem('mc-musteriler',JSON.stringify(_mc));document.getElementById('mc-isim').value='';document.getElementById('mc-konu').value='';renderMcListe();toast('✓ Müşteri eklendi','success');}
 function mcSil(id){const i=_mc.findIndex(m=>m.id===id);if(i>-1){_mc.splice(i,1);localStorage.setItem('mc-musteriler',JSON.stringify(_mc));renderMcListe();}}
@@ -3597,7 +4085,7 @@ function pomSifirla(){pomDurdur();_pomSn=_pomCal*60;_pomModCal=true;const el=doc
 function alisHedefKaydet(){const h={alkol:parseFloat(document.getElementById('hedefAlkol')?.value)||0,sigara:parseFloat(document.getElementById('hedefSigara')?.value)||0,boya:parseFloat(document.getElementById('hedefBoya')?.value)||0};localStorage.setItem('alis_hedef',JSON.stringify(h));toast('🎯 Hedefler kaydedildi!','success');}
 function alisGunlukKaydet(){const log=JSON.parse(localStorage.getItem('alis_log')||'[]');const k={tarih:_ydt(),alkol:parseFloat(document.getElementById('kayitAlkol')?.value)||0,alkolTl:parseFloat(document.getElementById('kayitAlkolTl')?.value)||0,sigara:parseFloat(document.getElementById('kayitSigara')?.value)||0,sigaraTl:parseFloat(document.getElementById('kayitSigaraTl')?.value)||0,boyaTl:parseFloat(document.getElementById('kayitBoyaTl')?.value)||0,boyaNe:document.getElementById('kayitBoyaNe')?.value.trim()||''};const idx=log.findIndex(l=>l.tarih===_ydt());if(idx>-1)log[idx]=k;else log.push(k);localStorage.setItem('alis_log',JSON.stringify(log));['kayitAlkol','kayitAlkolTl','kayitSigara','kayitSigaraTl','kayitBoyaTl','kayitBoyaNe'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});toast('✓ Kaydedildi','success');alisOzetRender();}
 function alisOzetRender(){const el=document.getElementById('alisSummary');if(!el)return;const log=JSON.parse(localStorage.getItem('alis_log')||'[]');const h=JSON.parse(localStorage.getItem('alis_hedef')||'null')||{};const now=new Date(),paz=new Date(now);paz.setDate(now.getDate()-((now.getDay()+6)%7));paz.setHours(0,0,0,0);const hafta=log.filter(l=>new Date(l.tarih)>=paz);const topAlkol=hafta.reduce((a,l)=>a+(l.alkol||0),0);const topSigara=hafta.reduce((a,l)=>a+(l.sigara||0),0);const gun=hafta.length||1;const renk=(g,h)=>!h?'var(--text2)':g<=h?'var(--green)':'var(--red)';el.innerHTML=`<div style="display:flex;flex-direction:column;gap:.4rem"><div style="background:var(--bg3);border-radius:8px;padding:.65rem .85rem;font-size:.85rem;display:flex;justify-content:space-between"><span>🍺 Alkol (hafta)</span><strong style="color:${renk(topAlkol,h.alkol)}">${topAlkol} kadeh${h.alkol?` / hedef ${h.alkol}`:''}</strong></div><div style="background:var(--bg3);border-radius:8px;padding:.65rem .85rem;font-size:.85rem;display:flex;justify-content:space-between"><span>🚬 Sigara (günlük ort)</span><strong style="color:${renk(topSigara/gun,h.sigara)}">${Math.round(topSigara/gun*10)/10} adet${h.sigara?` / hedef ${h.sigara}`:''}</strong></div>${h.alkol&&topAlkol>h.alkol?`<div style="background:var(--red-dim);border:1px solid rgba(240,77,77,.3);border-radius:8px;padding:.65rem;font-size:.8rem;color:var(--red)">⚠️ Alkol hedefini ${topAlkol-h.alkol} kadeh aştın!</div>`:''}</div>`;
-const mel=document.getElementById('alisMaliyet');if(!mel)return;const ay=new Date();ay.setDate(1);ay.setHours(0,0,0,0);const ayLog=log.filter(l=>new Date(l.tarih)>=ay);const atl=ayLog.reduce((a,l)=>a+(l.alkolTl||0),0),stl=ayLog.reduce((a,l)=>a+(l.sigaraTl||0),0),btl=ayLog.reduce((a,l)=>a+(l.boyaTl||0),0);const top=atl+stl+btl;const td=state.debts.reduce((a,d)=>a+d.remaining,0)||state.settings.totalDebt;mel.innerHTML=top>0?`<div style="display:flex;flex-direction:column;gap:.35rem">${atl>0?`<div style="background:var(--bg3);border-radius:8px;padding:.6rem .85rem;font-size:.85rem;display:flex;justify-content:space-between"><span>🍺 Alkol</span><strong style="color:var(--red)">₺${atl.toLocaleString('tr-TR')}</strong></div>`:''} ${stl>0?`<div style="background:var(--bg3);border-radius:8px;padding:.6rem .85rem;font-size:.85rem;display:flex;justify-content:space-between"><span>🚬 Sigara</span><strong style="color:var(--red)">₺${stl.toLocaleString('tr-TR')}</strong></div>`:''} ${btl>0?`<div style="background:var(--bg3);border-radius:8px;padding:.6rem .85rem;font-size:.85rem;display:flex;justify-content:space-between"><span>🎨 Boya</span><strong style="color:var(--accent)">₺${btl.toLocaleString('tr-TR')}</strong></div>`:''}<div style="background:var(--red-dim);border:1px solid rgba(240,77,77,.3);border-radius:8px;padding:.7rem .85rem;font-size:.88rem;font-weight:700;display:flex;justify-content:space-between"><span>Toplam</span><strong style="color:var(--red)">₺${top.toLocaleString('tr-TR')}</strong></div>${td>0?`<div style="background:rgba(232,197,71,.08);border:1px solid rgba(232,197,71,.3);border-radius:8px;padding:.75rem;font-size:.82rem;line-height:1.7"><strong style="color:var(--accent)">Yıllık: ₺${(top*12).toLocaleString('tr-TR')}</strong><br><span style="color:var(--text2)">Bu parayı borcuna verseydin borcunun %${Math.round(top*12/td*100)}'ini kapatırdın</span></div>`:''}</div>`:'<p class="empty-state">Kayıt girdikçe hesaplanır.</p>';}
+const mel=document.getElementById('alisMaliyet');if(!mel)return;const ay=new Date();ay.setDate(1);ay.setHours(0,0,0,0);const ayLog=log.filter(l=>new Date(l.tarih)>=ay);const atl=ayLog.reduce((a,l)=>a+(l.alkolTl||0),0),stl=ayLog.reduce((a,l)=>a+(l.sigaraTl||0),0),btl=ayLog.reduce((a,l)=>a+(l.boyaTl||0),0);const top=atl+stl+btl;const td=state.debts.reduce((a,d)=>a+d.remaining,0)||state.settings.totalDebt;mel.innerHTML=top>0?`<div style="display:flex;flex-direction:column;gap:.35rem">${atl>0?`<div style="background:var(--bg3);border-radius:8px;padding:.6rem .85rem;font-size:.85rem;display:flex;justify-content:space-between"><span>🍺 Alkol</span><strong style="color:var(--red)">₺${atl.toLocaleString('tr-TR')}</strong></div>`:''} ${stl>0?`<div style="background:var(--bg3);border-radius:8px;padding:.6rem .85rem;font-size:.85rem;display:flex;justify-content:space-between"><span>🚬 Sigara</span><strong style="color:var(--red)">₺${stl.toLocaleString('tr-TR')}</strong></div>`:''} ${btl>0?`<div style="background:var(--bg3);border-radius:8px;padding:.6rem .85rem;font-size:.85rem;display:flex;justify-content:space-between"><span>🎨 Boya</span><strong style="color:var(--gold)">₺${btl.toLocaleString('tr-TR')}</strong></div>`:''}<div style="background:var(--red-dim);border:1px solid rgba(240,77,77,.3);border-radius:8px;padding:.7rem .85rem;font-size:.88rem;font-weight:700;display:flex;justify-content:space-between"><span>Toplam</span><strong style="color:var(--red)">₺${top.toLocaleString('tr-TR')}</strong></div>${td>0?`<div style="background:rgba(232,197,71,.08);border:1px solid rgba(232,197,71,.3);border-radius:8px;padding:.75rem;font-size:.82rem;line-height:1.7"><strong style="color:var(--gold)">Yıllık: ₺${(top*12).toLocaleString('tr-TR')}</strong><br><span style="color:var(--text2)">Bu parayı borcuna verseydin borcunun %${Math.round(top*12/td*100)}'ini kapatırdın</span></div>`:''}</div>`:'<p class="empty-state">Kayıt girdikçe hesaplanır.</p>';}
 
 // ---- GLOBAL SCOPE ----
 window.finansKocAnaliz=finansKocAnaliz; window.isletmeKocAnaliz=isletmeKocAnaliz; window.borcKocAnaliz=borcKocAnaliz;
@@ -3640,13 +4128,67 @@ function veriImport(e) {
 }
 window.veriExport = veriExport; window.veriImport = veriImport;
 
-// ===== VERGİ TAKVİMİ =====
+// ===== MENÜ TAKVİMİ =====
+function renderMenuTakvim() {
+  const el = document.getElementById('menuOdemeTakvim'); if(!el) return;
+  const now = new Date(); const bugunGun = now.getDate(); const bugunAy = now.getMonth(); const bugunYil = now.getFullYear();
+  const items = [];
+
+  // Borç ödemeleri
+  state.debts.forEach(d => {
+    if(d.remaining <= 0) return;
+    if(d.payDay > 0) {
+      const odemeTarihi = new Date(bugunYil, bugunAy, d.payDay);
+      if(odemeTarihi < now) odemeTarihi.setMonth(odemeTarihi.getMonth()+1);
+      const gunKaldi = Math.ceil((odemeTarihi-now)/86400000);
+      items.push({ tarih: odemeTarihi, gun: d.payDay, ay: odemeTarihi.toLocaleString('tr-TR',{month:'short'}), isim: d.name, alt: `Borç ödemesi · ${fmt(d.minPayment)}/ay`, tutar: fmt(d.minPayment), gunKaldi, tip: 'borc' });
+    }
+    if(d.dueDate) {
+      const due = new Date(d.dueDate);
+      const gunKaldi = Math.ceil((due-now)/86400000);
+      if(gunKaldi > 0) items.push({ tarih: due, gun: due.getDate(), ay: due.toLocaleString('tr-TR',{month:'short'}), isim: d.name+' (Son)', alt: `Son ödeme tarihi · ${fmt(d.remaining)} kalan`, tutar: fmt(d.remaining), gunKaldi, tip: 'borc' });
+    }
+  });
+
+  // Proje alacakları
+  getIslerimProjeler().filter(p => p.vade && p.durum !== 'tahsil').forEach(p => {
+    const vade = new Date(p.vade);
+    const gunKaldi = Math.ceil((vade-now)/86400000);
+    const kalan = (p.tutar||0) - (p.kapora||0) - ((p.odemeler||[]).reduce((a,o)=>a+o,0));
+    if(kalan > 0) items.push({ tarih: vade, gun: vade.getDate(), ay: vade.toLocaleString('tr-TR',{month:'short'}), isim: p.musteri, alt: `Alacak · ${IS_TIP_LABEL[p.tip]||p.tip}`, tutar: fmt(kalan), gunKaldi, tip: 'alacak' });
+  });
+
+  // Vergi/SGK
+  const vergiler = [{ad:'SGK Primi',gun:23},{ad:'KDV Beyanı',gun:26},{ad:'Muhtasar',gun:26}];
+  vergiler.forEach(v => {
+    const tarih = new Date(bugunYil, bugunAy, v.gun);
+    if(tarih < now) tarih.setMonth(tarih.getMonth()+1);
+    const gunKaldi = Math.ceil((tarih-now)/86400000);
+    if(gunKaldi <= 30) items.push({ tarih, gun: v.gun, ay: tarih.toLocaleString('tr-TR',{month:'short'}), isim: v.ad, alt: `Vergi / SGK`, tutar: '—', gunKaldi, tip: 'vergi' });
+  });
+
+  items.sort((a,b) => a.tarih-b.tarih);
+
+  if(!items.length) { el.innerHTML='<p class="empty-state">Yaklaşan ödeme veya tahsilat yok.</p>'; return; }
+
+  const renkMap = { borc: 'var(--red)', alacak: 'var(--gold)', vergi: 'var(--blue)' };
+  el.innerHTML = items.slice(0,8).map(i => {
+    const cls = i.gunKaldi <= 3 ? 'urgent' : i.gunKaldi <= 7 ? 'soon' : 'ok';
+    const renk = renkMap[i.tip]||'var(--text2)';
+    return `<div class="takvim-item ${cls}">
+      <div><div class="takvim-gun" style="color:${renk}">${i.gun}</div><div class="takvim-ay">${i.ay}</div></div>
+      <div class="takvim-body"><div class="takvim-name">${i.isim}</div><div class="takvim-sub">${i.alt} · ${i.gunKaldi <= 0 ? '⚠️ Bugün!' : i.gunKaldi+' gün kaldı'}</div></div>
+      <div class="takvim-tutar" style="color:${renk}">${i.tutar}</div>
+    </div>`;
+  }).join('');
+}
+window.renderMenuTakvim = renderMenuTakvim;
 function renderVergiTakvim() {
   const el = document.getElementById('vergiTakvim'); if(!el) return;
   const now = new Date(); const ay = now.getMonth()+1; const gun = now.getDate();
   const takvim = [
     {ad:'SGK Primi', gun:23, aylar:[1,2,3,4,5,6,7,8,9,10,11,12], renk:'var(--red)', aciklama:'Her ay 23\'ünde'},
-    {ad:'Muhtasar Beyanname', gun:26, aylar:[1,2,3,4,5,6,7,8,9,10,11,12], renk:'var(--accent)', aciklama:'Her ay 26\'sında'},
+    {ad:'Muhtasar Beyanname', gun:26, aylar:[1,2,3,4,5,6,7,8,9,10,11,12], renk:'var(--gold)', aciklama:'Her ay 26\'sında'},
     {ad:'KDV Beyannamesi', gun:26, aylar:[1,2,3,4,5,6,7,8,9,10,11,12], renk:'#6c8fff', aciklama:'Her ay 26\'sında'},
     {ad:'Geçici Vergi (1. Dönem)', gun:17, aylar:[5], renk:'var(--green)', aciklama:'Mayıs 17'},
     {ad:'Geçici Vergi (2. Dönem)', gun:17, aylar:[8], renk:'var(--green)', aciklama:'Ağustos 17'},
@@ -3674,7 +4216,7 @@ function saveTeklifler(t) { localStorage.setItem('islerim_teklifler', JSON.strin
 
 const IS_TIP_LABEL = {'cam-balkon':'🪟 Cam Balkon','pvc':'🚪 PVC Doğrama','giyotin':'⬆️ Giyotin Cam','surme':'↔️ Sürgülü','diger':'📦 Diğer'};
 const DURUM_LABEL = {'kesif':'🔍 Keşif','teklif':'📋 Teklif','onaylandi':'✅ Onaylandı','montaj':'🔧 Montaj','tamamlandi':'🎉 Tamamlandı','tahsil':'💰 Tahsil'};
-const DURUM_RENK = {'kesif':'var(--text3)','teklif':'var(--accent)','onaylandi':'#6c8fff','montaj':'var(--accent2)','tamamlandi':'var(--green)','tahsil':'var(--green)'};
+const DURUM_RENK = {'kesif':'var(--text3)','teklif':'var(--gold)','onaylandi':'#6c8fff','montaj':'var(--gold)','tamamlandi':'var(--green)','tahsil':'var(--green)'};
 
 let _islerimFiltre = 'hepsi';
 
@@ -3744,7 +4286,7 @@ function renderIslerimProjeler() {
         <span>Kapora: <strong style="color:var(--green)">₺${(p.kapora||0).toLocaleString('tr-TR')}</strong></span>
         <span>Kalan: <strong style="color:${kalan-tahsil+p.kapora>0?'var(--red)':'var(--green)'}">₺${Math.max(0,(p.tutar||0)-tahsil).toLocaleString('tr-TR')}</strong></span>
       </div>
-      ${p.gercekMaliyet||p.tahminMaliyet ? `<div style="font-size:.75rem;color:var(--text2);margin-bottom:.4rem">Kâr tahmini: <strong style="color:${marj>=20?'var(--green)':marj>=10?'var(--accent)':'var(--red)'}">${marj}% (₺${net.toLocaleString('tr-TR')})</strong></div>` : ''}
+      ${p.gercekMaliyet||p.tahminMaliyet ? `<div style="font-size:.75rem;color:var(--text2);margin-bottom:.4rem">Kâr tahmini: <strong style="color:${marj>=20?'var(--green)':marj>=10?'var(--gold)':'var(--red)'}">${marj}% (₺${net.toLocaleString('tr-TR')})</strong></div>` : ''}
       <div style="display:flex;gap:.4rem;flex-wrap:wrap">
         <button class="del-btn" onclick="projeDurumDegistir('${p.id}')" style="flex:1;font-size:.75rem">Durum ↑</button>
         <button class="del-btn" onclick="projeOdemeEkle('${p.id}')" style="flex:1;font-size:.75rem">+ Ödeme</button>
@@ -3860,7 +4402,7 @@ function renderMontaj() {
       const gecti = new Date(p.montajTarih) < bugun;
       return `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;margin-bottom:.35rem;display:flex;justify-content:space-between;align-items:center;${gecti?'opacity:.6':''}">
         <div><div style="font-size:.88rem;font-weight:600">${p.musteri}</div><div style="font-size:.72rem;color:var(--text2)">${IS_TIP_LABEL[p.tip]||p.tip} · ${DURUM_LABEL[p.durum]||p.durum}</div></div>
-        <div style="text-align:right"><div style="font-size:.8rem;font-weight:700;color:${gecti?'var(--text3)':'var(--accent)'}">${p.montajTarih}</div>${gecti?'<div style="font-size:.65rem;color:var(--text3)">Geçti</div>':''}</div>
+        <div style="text-align:right"><div style="font-size:.8rem;font-weight:700;color:${gecti?'var(--text3)':'var(--gold)'}">${p.montajTarih}</div>${gecti?'<div style="font-size:.65rem;color:var(--text3)">Geçti</div>':''}</div>
       </div>`;
     }).join('') : '<p class="empty-state">Montaj tarihi girilmiş proje yok.</p>';
   }
@@ -3886,7 +4428,7 @@ function renderKarlilik() {
     });
     karEl.innerHTML = sirali.length ? sirali.map(([tip, v]) => {
       const marj = v.gelir>0 ? Math.round((v.gelir-v.maliyet)/v.gelir*100) : 0;
-      const renk = marj>=30?'var(--green)':marj>=15?'var(--accent)':'var(--red)';
+      const renk = marj>=30?'var(--green)':marj>=15?'var(--gold)':'var(--red)';
       return `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;margin-bottom:.4rem">
         <div style="display:flex;justify-content:space-between;margin-bottom:.4rem"><span style="font-weight:600">${IS_TIP_LABEL[tip]||tip}</span><span style="color:${renk};font-weight:700">%${marj} kâr</span></div>
         <div style="height:6px;background:var(--bg);border-radius:3px;overflow:hidden"><div style="height:100%;width:${Math.min(100,Math.max(0,marj))}%;background:${renk};border-radius:3px"></div></div>
@@ -3905,7 +4447,7 @@ function renderKarlilik() {
       const marj = p.tutar>0 ? Math.round(net/p.tutar*100) : 0;
       return `<div style="background:var(--bg3);border-radius:8px;padding:.65rem 1rem;margin-bottom:.3rem;display:flex;justify-content:space-between;align-items:center">
         <div><div style="font-size:.85rem;font-weight:600">${p.musteri}</div><div style="font-size:.72rem;color:var(--text2)">${IS_TIP_LABEL[p.tip]||p.tip}</div></div>
-        <div style="text-align:right"><div style="font-weight:700;color:${marj>=20?'var(--green)':'var(--accent)'}">₺${net.toLocaleString('tr-TR')}</div><div style="font-size:.7rem;color:var(--text2)">%${marj}</div></div>
+        <div style="text-align:right"><div style="font-weight:700;color:${marj>=20?'var(--green)':'var(--gold)'}">₺${net.toLocaleString('tr-TR')}</div><div style="font-size:.7rem;color:var(--text2)">%${marj}</div></div>
       </div>`;
     }).join('') : '<p class="empty-state">Tamamlanan projeler eklenince görünür.</p>';
   }
@@ -3933,7 +4475,7 @@ function teklifHesapla() {
   const topMaliyet = (malzeme + iscilik) * m2;
   const teklifFiyat = topMaliyet * (1 + marj/100);
   const kar = teklifFiyat - topMaliyet;
-  const renk = marj>=30?'var(--green)':marj>=15?'var(--accent)':'var(--red)';
+  const renk = marj>=30?'var(--green)':marj>=15?'var(--gold)':'var(--red)';
   r.style.display='block';
   r.innerHTML=`<div style="display:flex;flex-direction:column;gap:.4rem">
     <div style="display:flex;justify-content:space-between"><span>Alan</span><strong>${m2} m²</strong></div>
@@ -3958,7 +4500,7 @@ function renderTeklifGecmis() {
   el.innerHTML = teklifler.length ? teklifler.slice(0,10).map(t => `
     <div style="background:var(--bg3);border-radius:8px;padding:.65rem 1rem;margin-bottom:.35rem;display:flex;justify-content:space-between;align-items:center">
       <div><div style="font-size:.85rem;font-weight:600">${IS_TIP_LABEL[t.tip]||t.tip||'—'} · ${t.m2} m²</div><div style="font-size:.72rem;color:var(--text2)">${t.tarih}</div></div>
-      <div style="text-align:right"><div style="font-weight:700;color:var(--accent)">₺${(t.fiyat||0).toLocaleString('tr-TR')}</div><div style="font-size:.7rem;color:var(--text3)">maliyet: ₺${(t.maliyet||0).toLocaleString('tr-TR')}</div></div>
+      <div style="text-align:right"><div style="font-weight:700;color:var(--gold)">₺${(t.fiyat||0).toLocaleString('tr-TR')}</div><div style="font-size:.7rem;color:var(--text3)">maliyet: ₺${(t.maliyet||0).toLocaleString('tr-TR')}</div></div>
     </div>`).join('') : '<p class="empty-state">Henüz teklif kaydedilmedi.</p>';
 }
 
@@ -3968,13 +4510,13 @@ function renderTedarik() {
   const artisEl = document.getElementById('fiyatArtis');
   el.innerHTML = tedarik.length ? tedarik.map(t => {
     const stokUyari = t.stok !== undefined && t.minStok !== undefined && t.stok <= t.minStok;
-    return `<div style="background:${stokUyari?'rgba(240,165,0,.06)':'var(--bg3)'};border:1px solid ${stokUyari?'var(--accent2)':'var(--border)'};border-radius:8px;padding:.75rem 1rem;margin-bottom:.4rem">
+    return `<div style="background:${stokUyari?'rgba(240,165,0,.06)':'var(--bg3)'};border:1px solid ${stokUyari?'var(--gold)':'var(--border)'};border-radius:8px;padding:.75rem 1rem;margin-bottom:.4rem">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
         <div><div style="font-weight:600;font-size:.88rem">${t.malzeme} <span style="font-size:.72rem;color:var(--text2)">· ${t.firma||''}</span></div>
         <div style="font-size:.75rem;color:var(--text2);margin-top:.15rem">Son güncelleme: ${t.tarih||'—'}</div></div>
         <div style="text-align:right">
-          <div style="font-weight:700;color:var(--accent)">₺${(t.fiyat||0).toLocaleString('tr-TR')} / ${t.birim||'m²'}</div>
-          ${stokUyari?`<div style="font-size:.7rem;color:var(--accent2)">⚠️ Stok: ${t.stok} ${t.birim||''}</div>`:t.stok!==undefined?`<div style="font-size:.7rem;color:var(--text3)">Stok: ${t.stok} ${t.birim||''}</div>`:''}
+          <div style="font-weight:700;color:var(--gold)">₺${(t.fiyat||0).toLocaleString('tr-TR')} / ${t.birim||'m²'}</div>
+          ${stokUyari?`<div style="font-size:.7rem;color:var(--gold)">⚠️ Stok: ${t.stok} ${t.birim||''}</div>`:t.stok!==undefined?`<div style="font-size:.7rem;color:var(--text3)">Stok: ${t.stok} ${t.birim||''}</div>`:''}
         </div>
       </div>
       <div style="display:flex;gap:.4rem;margin-top:.5rem">
@@ -4043,10 +4585,10 @@ SADECE JSON: {"ozet":"işletme durumu 2 cümle","acil":["YAP: acil 1","YAP: acil
     const p = parseJSON(raw);
     box.innerHTML = `
       <div style="background:rgba(62,207,142,.08);border:1px solid rgba(62,207,142,.3);border-radius:10px;padding:.85rem;margin-bottom:.5rem;font-size:.85rem;line-height:1.7"><strong style="color:var(--green)">📊 Durum</strong><br><span style="color:var(--text2)">${p.ozet||''}</span></div>
-      <div style="margin-bottom:.5rem">${(p.acil||[]).map(a=>`<div style="background:var(--bg3);border-left:3px solid var(--accent);border-radius:8px;padding:.7rem;margin-bottom:.35rem;font-size:.85rem;font-weight:600">${a}</div>`).join('')}</div>
+      <div style="margin-bottom:.5rem">${(p.acil||[]).map(a=>`<div style="background:var(--bg3);border-left:3px solid var(--gold);border-radius:8px;padding:.7rem;margin-bottom:.35rem;font-size:.85rem;font-weight:600">${a}</div>`).join('')}</div>
       ${topAlacak>0?`<div style="background:rgba(240,77,77,.06);border:1px solid rgba(240,77,77,.25);border-radius:8px;padding:.75rem;margin-bottom:.5rem;font-size:.85rem"><strong style="color:var(--red)">💰 Alacak: </strong><span style="color:var(--text2)">${p.alacak||''}</span></div>`:''}
-      ${kritikStok?`<div style="background:rgba(240,165,0,.08);border:1px solid var(--accent2);border-radius:8px;padding:.75rem;margin-bottom:.5rem;font-size:.85rem"><strong style="color:var(--accent2)">⚠️ Stok: </strong><span style="color:var(--text2)">${p.stok||''}</span></div>`:''}
-      <div style="background:var(--bg3);border:2px solid var(--accent);border-radius:8px;padding:.75rem;margin-bottom:.5rem;font-size:.85rem"><strong style="color:var(--accent)">🎯 Bu Hafta: </strong>${p.hafta||''}</div>
+      ${kritikStok?`<div style="background:rgba(240,165,0,.08);border:1px solid var(--gold);border-radius:8px;padding:.75rem;margin-bottom:.5rem;font-size:.85rem"><strong style="color:var(--gold)">⚠️ Stok: </strong><span style="color:var(--text2)">${p.stok||''}</span></div>`:''}
+      <div style="background:var(--bg3);border:2px solid var(--gold);border-radius:8px;padding:.75rem;margin-bottom:.5rem;font-size:.85rem"><strong style="color:var(--gold)">🎯 Bu Hafta: </strong>${p.hafta||''}</div>
       <div style="background:rgba(62,207,142,.06);border:1px solid rgba(62,207,142,.2);border-radius:8px;padding:.75rem;font-size:.85rem;font-style:italic;color:var(--text2)">💬 ${p.motivasyon||''}</div>`;
   } catch(e) { box.innerHTML=`<div style="color:var(--red);font-size:.85rem;padding:1rem">⚠️ ${e.message}</div>`; }
 }
@@ -4149,7 +4691,7 @@ window.islerimKocAnaliz = islerimKocAnaliz;
 <div id="frenOverlay" class="fren-overlay" style="display:none">
   <div class="fren-box">
     <div style="font-size:3rem">🛑</div>
-    <h3 style="font-family:var(--font-display);font-size:1.3rem;margin-bottom:.5rem">Dur, Düşün!</h3>
+    <h3 style="font-family:var(--font);font-size:1.3rem;margin-bottom:.5rem">Dur, Düşün!</h3>
     <p style="font-size:.85rem;color:var(--text2);margin-bottom:.25rem" id="frenTutarText"></p>
     <p style="font-size:.8rem;color:var(--text2);margin-bottom:1rem">Bu harcama gerçekten gerekli mi? 72 saat bekle — %80'i geçer.</p>
     <div class="fren-timer" id="frenTimer">72:00:00</div>
